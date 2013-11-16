@@ -2,6 +2,7 @@
 #define Interface_h
 
 #include "Arduino.h"
+#include "motorInstructions.h"
 
 class Interface {
 public:
@@ -10,6 +11,7 @@ public:
 	void buttonsRefresh();
 	void clearAll();
 	void debug();
+	motorInstructions updateMotorInstructions();
 	
 private:
 };

@@ -2,6 +2,7 @@
 #include "Interface.h"
 #include "LcdDevice.h"
 #include "Buttons.h"
+#include "motorInstructions.h"
 
 #define lineUp 3
 #define lineDown 2
@@ -250,5 +251,19 @@ MAIN MENU Page 2:
 
 void Interface::buttonsRefresh(){
 	btn.scanButtons();
+}
+
+motorInstructions Interface::updateMotorInstructions(){
+	motorInstructions instructions;
+	instructions.manualSpeed = lcd.manualSpeed;
+	instructions.manualPosition = lcd.manualPosition;
+	instructions.smartFps = lcd.smartFps;
+	instructions.smartOutputDuration = lcd.smartOutputDuration;
+	instructions.smartEventDuration = lcd.smartEventDuration;
+	instructions.samrtMovementRange = lcd.samrtMovementRange;
+	instructions.basicMoveDelay = lcd.basicMoveDelay;
+	instructions.basicMoveFrames = lcd.basicMoveFrames;
+	instructions.basicMoveRange = lcd.basicMoveRange;
+	return(instructions);
 }
 

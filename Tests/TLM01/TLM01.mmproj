@@ -1,0 +1,22 @@
+<mm_project serial_port="COM6" board="Arduino Uno" programmer="" includePaths="" libPaths="" libs="" default="yes" useCodeAutomation="yes" linkPrintfVersion="1" serialPortSpeed="" >
+  <files>
+    <file name="TLM01_main.cpp" open="yes" />
+    <file name="tlm01_main.h" open="no" />
+    <file name="AccelStepper.cpp" open="no" />
+    <file name="BigEasyDriver.cpp" open="yes" />
+    <file name="MeetAndroid.cpp" open="no" />
+    <file name="MotorControl.cpp" open="yes" />
+    <file name="SerialAga.cpp" open="yes" />
+    <file name="AccelStepper.h" open="no" />
+    <file name="BigEasyDriver.h" open="yes" />
+    <file name="MeetAndroid.h" open="no" />
+    <file name="MotorControl.h" open="yes" />
+    <file name="SerialAga.h" open="yes" />
+    <file name="Tlm.cpp" open="yes" />
+    <file name="Tlm.h" open="yes" />
+  </files>
+  <extras>
+  </extras>
+  <externals>
+  </externals>
+</mm_project>

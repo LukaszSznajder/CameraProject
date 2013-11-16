@@ -1,0 +1,13 @@
+<mm_project serial_port="COM6" board="Arduino Uno" programmer="" includePaths="" libPaths="" libs="" default="no" useCodeAutomation="yes" linkPrintfVersion="1" serialPortSpeed="" >
+  <files>
+    <file name="blink_main.h" open="no" />
+    <file name="Blink_main.cpp" open="yes" />
+    <file name="MeetAndroid.cpp" open="no" />
+    <file name="MeetAndroid.h" open="no" />
+  </files>
+  <extras>
+  </extras>
+  <externals>
+    <external name="D:\arduino-1.0\libraries\LiquidCrystal\LiquidCrystal.cpp" />
+  </externals>
+</mm_project>

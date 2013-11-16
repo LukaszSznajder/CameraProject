@@ -1,7 +1,6 @@
  \
- c:\users\lukasz\documents\github\cameraproject\MotoRail\build\obj\MotoRail_main.cpp.o:  \
- c:\users\lukasz\documents\github\cameraproject\MotoRail\source\MotoRail_main.cpp \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/Interface.h \
+ c:\users\lukasz\documents\github\cameraproject\MotoRail\build\obj\MotorControl.cpp.o:  \
+ c:\users\lukasz\documents\github\cameraproject\MotoRail\source\MotorControl.cpp \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Arduino.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/binary.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/WCharacter.h \
@@ -12,9 +11,6 @@
   D:\arduino-1.0\hardware\arduino\cores\arduino/Printable.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/new.h \
   D:\arduino-1.0\hardware\arduino\variants\standard/pins_arduino.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/LcdDevice.h \
-  D:\arduino-1.0\libraries\LiquidCrystal/LiquidCrystal.h \
-  D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/MotorControl.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h
+  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h \
+  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/BigEasyDriver.h

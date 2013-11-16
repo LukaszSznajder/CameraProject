@@ -11,13 +11,9 @@ Interface interface;
 //LcdDevice lcd2;
 
 void setup() {
-	//lcd2.currentPage = 0;
-	//lcd2.lcdRefresh();
 }
 
 void loop() {
-	//interface.clearAll();
-	delay(2000);
-	//lcd2.currentPage = lcd2.currentPage + 1;
-	//lcd2.lcdRefresh();
+	interface.buttonsRefresh();
+	interface.interfaceRefresh();
 }

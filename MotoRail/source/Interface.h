@@ -6,9 +6,10 @@
 class Interface {
 public:
 	Interface();
-	void refreshAll();
+	void interfaceRefresh();
 	void buttonsRefresh();
 	void clearAll();
+	void debug();
 	
 private:
 };

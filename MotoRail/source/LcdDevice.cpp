@@ -4,6 +4,8 @@
 
 #define backLightPin 8
 
+#define cursorColumn 0
+
 #define intro 0
 #define mainMenuPage1 1
 #define mainMenuPage2 2
@@ -37,8 +39,13 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	smartOutputDuration = 0;
 	smartEventDuration = 0;
 	samrtMovementRange = 0;
+	basicMoveDelay = 0;
+	basicMoveFrames = 0;
+	basicMoveRange = 0;
 	startFlag = 0;
 	currentPage = 0;
+	cursorLine = 0;
+	forceRefresh = false;
 }
 
 void LcdDevice::lcdClear(LiquidCrystal LCD){
@@ -46,86 +53,150 @@ void LcdDevice::lcdClear(LiquidCrystal LCD){
 }
 
 void LcdDevice::lcdRefresh(LiquidCrystal LCD){
-	LCD.clear(); 
-	LCD.setCursor(0, 0); // (column, row)
-	switch (currentPage){
-		case intro:
-			LCD.setCursor(0, 0);
-			LCD.print("Motorized Rail");
-			LCD.setCursor(0, 1);
-			LCD.print("v0.1");
-			break;
-		case mainMenuPage1:
-			LCD.setCursor(0, 0);
-			LCD.print("   Simple Move");
-			LCD.setCursor(0, 1);
-			LCD.print("   Smart Sequence");
-			break;
-		case mainMenuPage2:
-			LCD.setCursor(0, 0);
-			LCD.print("   Smart Sequence");
-			LCD.setCursor(0, 1);
-			LCD.print("   Basic Sequence");
-			break;
-		case SimpleMove:
-			LCD.setCursor(0, 0);
-			LCD.print(" Click to move");
-			LCD.setCursor(0, 1);
-			LCD.print("<<<<S:xx>>>>P:xx");
-			break;
-		case SmartSequencePage1:
-			LCD.setCursor(0, 0);
-			LCD.print("   FPS:xx #");
-			LCD.setCursor(0, 1);
-			LCD.print("   Output:xxx s");
-			break;
-		case SmartSequencePage2:
-			LCD.setCursor(0, 0);
-			LCD.print("   Output:xxx s");
-			LCD.setCursor(0, 1);
-			LCD.print("   Event:xxx min");
-			break;
-		case SmartSequencePage3:
-			LCD.setCursor(0, 0);
-			LCD.print("   Event:xxx min");
-			LCD.setCursor(0, 1);
-			LCD.print("   Range:xx %");
-			break;
-		case SmartSequencePage4:
-			LCD.setCursor(0, 0);
-			LCD.print("   Range:xx %");
-			LCD.setCursor(0, 1);
-			LCD.print("   Start");
-			break;
-		case SequenceBasicPage1:
-			LCD.setCursor(0, 0);
-			LCD.print("   Delay:xx s");
-			LCD.setCursor(0, 1);
-			LCD.print("   Frames:xxx #");
-			break;
-		case SequenceBasicPage2:
-			LCD.setCursor(0, 0);
-			LCD.print("   Frames:xxx #");
-			LCD.setCursor(0, 1);
-			LCD.print("   Move:xx cm");
-			break;
-		case SequenceBasicPage3:
-			LCD.setCursor(0, 0);
-			LCD.print("   Move:xx cm");
-			LCD.setCursor(0, 1);
-			LCD.print("   Start");
-			break;
-		case ButtonDebug:
-			LCD.setCursor(0, 0);
-			LCD.print("Button: ");
-			LCD.print(lcdButton);
-			LCD.setCursor(0, 1);
-			LCD.print("Pressed: ");
-			LCD.print(lcdPressed);
-			break;
-		default:
-			break;
-	}
+		LCD.clear(); 		
+		switch (currentPage){
+		//INTRO (Pages: 1)
+			case intro:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print("Motorized Rail");
+				LCD.setCursor(0, 1);
+				LCD.print("v0.1");
+				lastPage = intro;
+				firstPage = intro;
+				break;
+		//MAIN MENU (Pages: 2)
+			case mainMenuPage1:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Simple Move");
+				LCD.setCursor(0, 1);
+				LCD.print(" Smart Sequence");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = mainMenuPage1;
+				lastPage = mainMenuPage2;
+				break;
+			case mainMenuPage2:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Basic Sequence");
+				LCD.setCursor(0, 1);
+				LCD.print("          ");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = mainMenuPage1;
+				lastPage = mainMenuPage2;
+				break;
+		//SIMPLE MOVE (Pages: 1)
+			case SimpleMove:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Click to move");
+				LCD.setCursor(0, 1);
+				LCD.print("<<<<S:");
+				LCD.print(manualSpeed);
+				LCD.setCursor(8, 1);
+				LCD.print(">>>>P:");
+				LCD.print(manualPosition);
+				firstPage = SimpleMove;
+				lastPage = SimpleMove;
+				break;
+		//SMART SEQUENCE (Pages: 4)
+			case SmartSequencePage1:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" FPS:");
+				LCD.print(smartFps);
+				LCD.print(" #");
+				LCD.setCursor(0, 1);
+				LCD.print(" Output:");
+				LCD.print(smartOutputDuration);
+				LCD.print(" s");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = SmartSequencePage1;
+				lastPage = SmartSequencePage3;
+				break;
+			case SmartSequencePage2:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Event:");
+				LCD.print(smartEventDuration);
+				LCD.print(" min");
+				LCD.setCursor(0, 1);
+				LCD.print(" Range:");
+				LCD.print(samrtMovementRange);
+				LCD.print(" %");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = SmartSequencePage1;
+				lastPage = SmartSequencePage3;
+				break;
+			case SmartSequencePage3:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Start");
+				LCD.setCursor(0, 1);
+				LCD.print("      ");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = SmartSequencePage1;
+				lastPage = SmartSequencePage3;
+				break;
+			case SmartSequencePage4:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print("      ");
+				LCD.setCursor(0, 1);
+				LCD.print("      ");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				break;
+		//BASIC SEQUENCE (Pages: 3)
+			case SequenceBasicPage1:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Delay:");
+				LCD.print(basicMoveDelay);
+				LCD.print(" s");
+				LCD.setCursor(0, 1);
+				LCD.print(" Frames:");
+				LCD.print(basicMoveFrames);
+				LCD.print(" #");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = SequenceBasicPage1;
+				lastPage = SequenceBasicPage2;
+				break;
+			case SequenceBasicPage2:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print(" Move:");
+				LCD.print(basicMoveRange);
+				LCD.print(" cm");
+				LCD.setCursor(0, 1);
+				LCD.print(" Start");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = SequenceBasicPage1;
+				lastPage = SequenceBasicPage2;
+				break;
+			case SequenceBasicPage3:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print("      ");
+				LCD.setCursor(0, 1);
+				LCD.print("      ");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				break;
+		//BUTTON DEBUG (Pages: 1)
+			case ButtonDebug:
+				LCD.setCursor(0, 0); // (column, row)
+				LCD.print("Button: ");
+				LCD.print(lcdButton);
+				LCD.setCursor(0, 1);
+				LCD.print("Pressed: ");
+				LCD.print(lcdPressed);
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print("-");
+				firstPage = ButtonDebug;
+				lastPage = ButtonDebug;
+				break;
+			default:
+				break;
+		}
+//	}
 }
 
 void LcdDevice::zeroValues(){
@@ -135,5 +206,52 @@ void LcdDevice::zeroValues(){
 	smartOutputDuration = 0;
 	smartEventDuration = 0;
 	samrtMovementRange = 0;
+	basicMoveDelay = 0;
+	basicMoveFrames = 0;
+	basicMoveRange = 0;
 	startFlag = 0;
 }
+
+/*
+//------------------------------------
+//------------------------------------
+//	
+//	  1234567890123456
+//   -----------------
+// 1 | ? Simple Move
+// 2 | V Seqence Smart
+// 3 |   Seqence Basic
+//   -----------------
+//
+//------------
+//Sub-Menu's:
+//
+// Simple Move:  
+//	  1234567890123456
+// -------------------
+// 1 | Click to move
+// 2 |<<<<S:xx>>>>P:xx
+// ------------------- 
+//
+// Sequence Smart: 
+//    1234567890123456
+// -------------------
+// 1 | ? FPS:xx #
+// 2 | V Output:xxx s
+// 3 |   Event:xxx min
+// 4 |   Range:xx %
+// 5 |   Start
+// -------------------
+//
+// Sequence Basic:
+//    1234567890123456
+// -------------------
+// 1 | ? Delay:xx s
+// 2 | V Frames:xxx #
+// 3 |   Move:xx cm
+// 5 |   Start
+// -------------------
+//
+//------------------------------------
+//------------------------------------
+*/

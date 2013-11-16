@@ -15,8 +15,8 @@ void Buttons::scanButtons(){
 	int whichButton1;
 	int whichButton2;
 	int whichButton3;
-	int _deBounceDelay = 10;
-	long int _pressedTDel = 100000;
+	int _deBounceDelay = 1;
+	long int _pressedTDel = 250000;
 	long int _currentTime = 0;
 
 	btnValue = analogRead(buttonsPin);

@@ -11,7 +11,7 @@ public:
 	void buttonsRefresh();
 	void clearAll();
 	void debug();
-	motorInstructions updateMotorInstructions();
+	void updateMotorInstructions();
 	
 private:
 };

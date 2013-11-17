@@ -2,7 +2,7 @@
 #include "Interface.h"
 #include "LcdDevice.h"
 #include "Buttons.h"
-#include "motorInstructions.h"
+#include "BigEasyDriver.h"
 
 #define lineUp 3
 #define lineDown 2
@@ -10,6 +10,8 @@
 #define left 1
 #define accept 6
 #define cancel 5
+
+#define rampStepsSimpleMove 500
 
 #define intro 0
 #define mainMenuPage1 1
@@ -25,6 +27,13 @@
 #define ButtonDebug 11
 #define ledPin 13
 #define incrementSize 1
+
+#define dirPin 19
+#define stepPin 18
+
+#define noDebug false
+
+BigEasyDriver motor(dirPin, stepPin);
 
 Buttons btn;
 
@@ -132,17 +141,13 @@ void Interface::interfaceRefresh(){
 //  left 			
 //(btn: 1)
 
-#define SmartSequencePage1 4
-#define SmartSequencePage2 5
-#define SmartSequencePage3 6
-#define SmartSequencePage4 7
-#define SequenceBasicPage1 8
-#define SequenceBasicPage2 9
-#define SequenceBasicPage3 10
-
 		case left:
-			if(lcd.currentPage==SimpleMove)
-				lcd.manualSpeed = lcd.manualSpeed - incrementSize;
+// Simple Move
+			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
+				lcd.manualSpeed = lcd.manualSpeed - 500;
+			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
+				lcd.manualPercent = lcd.manualPercent - 5;
+// Smart Sequence
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
 				lcd.smartFps = lcd.smartFps - incrementSize; 
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
@@ -150,7 +155,8 @@ void Interface::interfaceRefresh(){
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
 				lcd.smartEventDuration = lcd.smartEventDuration - incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.samrtMovementRange = lcd.samrtMovementRange - incrementSize;	
+				lcd.samrtMovementRange = lcd.samrtMovementRange - incrementSize;
+// Basic Sequence	
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
 				lcd.basicMoveDelay = lcd.basicMoveDelay - incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
@@ -163,16 +169,21 @@ void Interface::interfaceRefresh(){
 // right 			
 //(btn: 4)
 		case right:
-			if(lcd.currentPage==SimpleMove)
-				lcd.manualSpeed = lcd.manualSpeed + incrementSize;
+// Simple Move
+			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
+				lcd.manualSpeed = lcd.manualSpeed + 500;
+			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
+				lcd.manualPercent = lcd.manualPercent + 5;
+// Smart Sequence				
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
-				lcd.smartFps = lcd.smartFps + incrementSize; 
+				lcd.smartFps = lcd.smartFps + incrementSize; 			
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
 				lcd.smartOutputDuration = lcd.smartOutputDuration + incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
 				lcd.smartEventDuration = lcd.smartEventDuration + incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.samrtMovementRange = lcd.samrtMovementRange + incrementSize;	
+				lcd.samrtMovementRange = lcd.samrtMovementRange + incrementSize;
+// Basic Sequence	
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
 				lcd.basicMoveDelay = lcd.basicMoveDelay + incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
@@ -194,12 +205,12 @@ MAIN MENU Page 2:
 
 */
 		case accept:
-			lcd.previousPage = lcd.currentPage;
-			lcd.previousCursorLine = lcd.cursorLine;
-			lcd.previousCursorPosition = lcd.cursorPosition;
 			switch (lcd.currentPage){
 //MAIN MENU Page 1
 				case  mainMenuPage1:
+					lcd.previousPage = lcd.currentPage;
+					lcd.previousCursorLine = lcd.cursorLine;
+					lcd.previousCursorPosition = lcd.cursorPosition;
 					switch (lcd.cursorPosition){
 	//Simple Move
 						case 0: 
@@ -216,6 +227,9 @@ MAIN MENU Page 2:
 					break;
 //MAIN MENU Page 2
 				case  mainMenuPage2:
+					lcd.previousPage = lcd.currentPage;
+					lcd.previousCursorLine = lcd.cursorLine;
+					lcd.previousCursorPosition = lcd.cursorPosition;
 					switch (lcd.cursorPosition){
 	//Sequence Basic
 						case 0: 
@@ -227,6 +241,12 @@ MAIN MENU Page 2:
 							break;
 						default: break;
 					}
+					break;
+	//Simple Move
+				case  SimpleMove:
+					motor.setRampSteps(rampStepsSimpleMove);
+					motor.setSps(lcd.manualSpeed);
+					motor.doAbsolutePercent(lcd.manualPercent);
 					break;
 				default:
 					break;
@@ -253,17 +273,7 @@ void Interface::buttonsRefresh(){
 	btn.scanButtons();
 }
 
-motorInstructions Interface::updateMotorInstructions(){
-	motorInstructions instructions;
-	instructions.manualSpeed = lcd.manualSpeed;
-	instructions.manualPosition = lcd.manualPosition;
-	instructions.smartFps = lcd.smartFps;
-	instructions.smartOutputDuration = lcd.smartOutputDuration;
-	instructions.smartEventDuration = lcd.smartEventDuration;
-	instructions.samrtMovementRange = lcd.samrtMovementRange;
-	instructions.basicMoveDelay = lcd.basicMoveDelay;
-	instructions.basicMoveFrames = lcd.basicMoveFrames;
-	instructions.basicMoveRange = lcd.basicMoveRange;
-	return(instructions);
+void Interface::updateMotorInstructions(){
+
 }
 

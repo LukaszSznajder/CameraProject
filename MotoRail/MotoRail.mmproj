@@ -4,16 +4,14 @@
     <file name="motorail_main.h" open="no" />
     <file name="LcdDevice.h" open="yes" />
     <file name="LcdDevice.cpp" open="yes" />
-    <file name="Buttons.cpp" open="yes" />
-    <file name="Buttons.h" open="yes" />
+    <file name="Buttons.cpp" open="no" />
+    <file name="Buttons.h" open="no" />
     <file name="Interface.h" open="yes" />
     <file name="Interface.cpp" open="yes" />
     <file name="BigEasyDriver.cpp" open="yes" />
     <file name="BigEasyDriver.h" open="yes" />
-    <file name="MotorControl.h" open="yes" />
-    <file name="MotorControl.cpp" open="yes" />
-    <file name="motorInstructions.cpp" open="yes" />
-    <file name="motorInstructions.h" open="yes" />
+    <file name="motorInstructions.cpp" open="no" />
+    <file name="motorInstructions.h" open="no" />
   </files>
   <extras>
   </extras>

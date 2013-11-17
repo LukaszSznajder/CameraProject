@@ -5,38 +5,60 @@
 
 #define pi 3.14159265359
 
+#define debugMode true
+
 #define distRot 5.093
 #define steepsPerRev 6400
 #define gearRadius 0.7958
+#define fullLength 72
+#define fullSpeed 4000
 
 bool _checkFlag;
 int _stepCount;
 
 #define clk 16000000
 #define n 8
-#define stSpeed 7000
-#define ramp 0.1
-#define rampStep 200
+#define stSpeed 1000
+#define ramp 0.1 //Not used.
+#define rampStep 500
 
-StepperControl::StepperControl(int dirPin, int stepPin){
+BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 	pinMode(dirPin, OUTPUT);
 	pinMode(stepPin, OUTPUT);
 	_dirPin = dirPin;
-	_invDir = 1;
+	_invDir = -1;
 	_stepPin = stepPin;
 	_dir = true;
 	_lineSpeed = 1;
-	_debugMode = false;
+	_debugMode = debugMode;
+	_fullLength = fullLength;
+	_sps = 0;
+	_currentLocation = 0;
+	_ramp = ramp;
+	_rampStep = rampStep; 
 }
 
-void StepperControl::doStep(double steps){
+void BigEasyDriver::doStep(double steps){
 
+
+	if(debugMode){
+		Serial.print("start_currentLocation: "); Serial.println(_currentLocation);
+	}
 	float inc;
+	if(_dir)
+		_currentLocation = _currentLocation - BigEasyDriver::convertStepsToDistance(steps);
+	else
+		_currentLocation = _currentLocation + BigEasyDriver::convertStepsToDistance(steps);
+	if(debugMode){
+		Serial.print("end_currentLocation: "); Serial.println(_currentLocation);
+		Serial.println(" ******************************");
+	}
 
     digitalWrite(_dirPin,_dir);
     delay(50);
 
     float rampSteps = rampStep;
+    //float rampSteps = steps * ramp;
     float startSpeed = stSpeed;
 
     float startPeriod = (1000000 * 1/startSpeed);
@@ -72,12 +94,17 @@ void StepperControl::doStep(double steps){
     	Serial.print(" delay increment: "); Serial.println(inc);
     }
     for(int i = 0;i<rampSteps;i++){
-    	digitalWrite(_stepPin, HIGH);
-    	delayMicroseconds(delayPeriod);
-    	digitalWrite(_stepPin, LOW);
-    	delayMicroseconds(delayPeriod);
-    	rampPeriod = rampPeriod + inc;
-    	delayPeriod = round(rampPeriod);
+		for(int k=0;k<=1;k=k+0.1){
+		
+			inc = (inc - startPeriod)/(10);
+		
+			digitalWrite(_stepPin, HIGH);
+			delayMicroseconds(delayPeriod);
+			digitalWrite(_stepPin, LOW);
+			delayMicroseconds(delayPeriod);
+			rampPeriod = rampPeriod + inc*k;
+			delayPeriod = round(rampPeriod);
+		}
     }
 
     // STEADY SPEED
@@ -115,15 +142,20 @@ void StepperControl::doStep(double steps){
     }
  }
 
-void StepperControl::doRev(float rev){
+void BigEasyDriver::doRev(float rev){
 	if(_debugMode){
 		Serial.print(" revolutions: "); Serial.println(rev);
 	}
 	double steps = rev * steepsPerRev;
-	StepperControl::doStep(steps);
+	BigEasyDriver::doStep(steps);
 }
 
-void StepperControl::doMove(float distance){
+void BigEasyDriver::doDeg(float deg){
+	float rev = deg/360;
+	BigEasyDriver::doRev(rev);
+}
+
+void BigEasyDriver::doMove(float distance){
 	if(_debugMode){
 		Serial.print(" distance: "); Serial.println(distance);
 	}
@@ -139,40 +171,62 @@ void StepperControl::doMove(float distance){
 		else
 			_dir = false;
 	float rev = distance * 1/(2*pi*gearRadius);
-	StepperControl::doRev(rev);
+	BigEasyDriver::doRev(rev);
 }
 
-void StepperControl::doDeg(float deg){
-	float rev = deg/360;
-	StepperControl::doRev(rev);
+void BigEasyDriver::doAbsolutePercent(int percent){
+	float _moveBy;
+	_moveBy = (fullLength * percent/100 )  - _currentLocation;
+	if(_debugMode){
+		Serial.println(" ------------------------------");
+		Serial.println("Absolute Percent Move"); 
+		Serial.println(" ******************************");
+		Serial.print("		percent: "); Serial.println(percent);
+		
+	}
+	BigEasyDriver::doMove(_moveBy);
 }
 
-void StepperControl::setLineSpeed(float lineSpeed){
+void BigEasyDriver::setLineSpeed(float lineSpeed){
 	_lineSpeed = lineSpeed;
 }
 
-void StepperControl::setDirection(bool dir){
+void BigEasyDriver::setDirection(bool dir){
 	_dir = dir;
 }
 
-void StepperControl::invDirection(int invDir){
+void BigEasyDriver::invDirection(int invDir){
 	_invDir = invDir;
 }
 
-void StepperControl::setDebugMode(boolean debug){
+void BigEasyDriver::setDebugMode(boolean debug){
 	_debugMode = debug;
 }
 
-void StepperControl::setSps(int sps){
+void BigEasyDriver::setSps(int sps){
 	_sps = sps;
 }
 
-float StepperControl::convertStepsToDistance(double steps){
+float BigEasyDriver::convertStepsToDistance(double steps){
 	float distance = 0;
-	
 	distance = (steps*2*pi*gearRadius)/steepsPerRev;
 	return (distance);
 }
 
+float BigEasyDriver::convertDegToDistance(double deg){
+	float distance = 0;
+	distance = (deg/360)*2*pi*gearRadius;
+	return (distance);
+}
+
+float BigEasyDriver::convertRevToDistance(double rev){
+	float distance = 0;
+	distance = rev*2*pi*gearRadius;
+	return (distance);
+}
+
+void BigEasyDriver::setRampSteps(int setRampSteps){
+	_rampStep = setRampSteps; 
+} 
 
 

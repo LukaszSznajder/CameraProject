@@ -5,23 +5,21 @@ description: <type what this file does>
 *************************************************************/
 #include "Interface.h"
 #include "LcdDevice.h"
-#include "MotorControl.h"
-#include "motorInstructions.h"
 
-#define noDebug false
+#define baundRate 115200
+#define debugMode true
 
-MotorControl motor(noDebug);
 Interface interface;
-motorInstructions MotorInstructions;
 
 //LcdDevice lcd2;
 
 void setup() {
+	if(debugMode){
+		Serial.begin(baundRate);
+	}
 }
 
 void loop() {
 	interface.buttonsRefresh();
 	interface.interfaceRefresh();
-	MotorInstructions = interface.updateMotorInstructions();
-	motor.motorExecute(MotorInstructions);	
 }

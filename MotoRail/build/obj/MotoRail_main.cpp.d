@@ -15,6 +15,4 @@
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/LcdDevice.h \
   D:\arduino-1.0\libraries\LiquidCrystal/LiquidCrystal.h \
-  D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/MotorControl.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h
+  D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h

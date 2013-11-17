@@ -33,9 +33,9 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	LCD.setCursor(0, 1); // (column, row)
 	LCD.print("v0.1");
 	
-	manualSpeed = 0;
-	manualPosition = 0;
+	manualPercent = 0;
 	smartFps = 0;
+	manualSpeed = 10000;
 	smartOutputDuration = 0;
 	smartEventDuration = 0;
 	samrtMovementRange = 0;
@@ -71,7 +71,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.setCursor(0, 1);
 				LCD.print(" Smart Sequence");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = mainMenuPage1;
 				lastPage = mainMenuPage2;
 				break;
@@ -81,20 +81,21 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.setCursor(0, 1);
 				LCD.print("          ");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = mainMenuPage1;
 				lastPage = mainMenuPage2;
 				break;
 		//SIMPLE MOVE (Pages: 1)
 			case SimpleMove:
 				LCD.setCursor(0, 0); // (column, row)
-				LCD.print(" Click to move");
-				LCD.setCursor(0, 1);
-				LCD.print("<<<<S:");
+				LCD.print(" Speed: ");
 				LCD.print(manualSpeed);
-				LCD.setCursor(8, 1);
-				LCD.print(">>>>P:");
-				LCD.print(manualPosition);
+				LCD.setCursor(0, 1);
+				LCD.print(" Position: ");
+				LCD.print(manualPercent);
+				LCD.print(" %");
+				LCD.setCursor(cursorColumn, cursorPosition);
+				LCD.print(">");
 				firstPage = SimpleMove;
 				lastPage = SimpleMove;
 				break;
@@ -109,7 +110,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.print(smartOutputDuration);
 				LCD.print(" s");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = SmartSequencePage1;
 				lastPage = SmartSequencePage3;
 				break;
@@ -123,7 +124,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.print(samrtMovementRange);
 				LCD.print(" %");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = SmartSequencePage1;
 				lastPage = SmartSequencePage3;
 				break;
@@ -133,7 +134,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.setCursor(0, 1);
 				LCD.print("      ");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = SmartSequencePage1;
 				lastPage = SmartSequencePage3;
 				break;
@@ -156,7 +157,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.print(basicMoveFrames);
 				LCD.print(" #");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = SequenceBasicPage1;
 				lastPage = SequenceBasicPage2;
 				break;
@@ -168,7 +169,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.setCursor(0, 1);
 				LCD.print(" Start");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = SequenceBasicPage1;
 				lastPage = SequenceBasicPage2;
 				break;
@@ -178,7 +179,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.setCursor(0, 1);
 				LCD.print("      ");
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				break;
 		//BUTTON DEBUG (Pages: 1)
 			case ButtonDebug:
@@ -189,7 +190,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 				LCD.print("Pressed: ");
 				LCD.print(lcdPressed);
 				LCD.setCursor(cursorColumn, cursorPosition);
-				LCD.print("-");
+				LCD.print(">");
 				firstPage = ButtonDebug;
 				lastPage = ButtonDebug;
 				break;
@@ -200,8 +201,6 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 }
 
 void LcdDevice::zeroValues(){
-	manualSpeed = 0;
-	manualPosition = 0;
 	smartFps = 0;
 	smartOutputDuration = 0;
 	smartEventDuration = 0;

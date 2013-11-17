@@ -10,8 +10,8 @@ public:
 	void lcdRefresh(LiquidCrystal LCD);
 	void zeroValues();
 	void lcdClear(LiquidCrystal LCD);
+	int manualPercent;
 	int manualSpeed;
-	int manualPosition;
 	int smartFps;
 	int smartOutputDuration;
 	int smartEventDuration;

@@ -1,27 +1,29 @@
-#ifndef StepperM_h
-#define StepperM_h
+#ifndef BigEasyDriver_h
+#define BigEasyDriver_h
 
 #include "Arduino.h"
 
-class StepperControl{
+class BigEasyDriver{
   public:
-    StepperControl(int dirPin, int stepPin);
-
-    void doRev(float rev);
-    void doDeg(float deg); //in deg
-    void doMove(float distance); //in cm
-    void doStep(double steps);
-
-    void setLineSpeed(float lineSpeed); //in cm/s
-    void setSps(int sps); // steps per second
-    void setDirection(bool dir); // true cw, false ccw
-
+    BigEasyDriver(int dirPin, int stepPin);
     void setDebugMode(boolean debug);
 
-    void invDirection(int invDir); //invert direction
+    void doRev(float rev); // approximatley 2 rev are 10 cm.
+    void doDeg(float deg); //in deg
+    void doMove(float distance); //in cm, to whole length of the rail is 72cm
+    void doStep(double steps); // steeps per rev 6400
+    void doAbsolutePercent(int percent);
     
     float convertStepsToDistance(double steps);
+    float convertDegToDistance(double deg);
+    float convertRevToDistance(double rev);
 
+    void setSps(int sps); // steps per second, normaly 10000 is considered fast and 1000 slow
+    void setDirection(bool dir); // true cw, false ccw
+    void setLineSpeed(float lineSpeed); //in cm/s, Not used!!!
+    void invDirection(int invDir); //invert direction
+    void setRampSteps(int setRampSteps); 
+    
   private:
     boolean _debugMode;
     int _dirPin;
@@ -30,6 +32,10 @@ class StepperControl{
     bool _dir;
     float _lineSpeed;
     int _sps;
+    float _currentLocation;
+	float _fullLength;
+	float _ramp;
+	int _rampStep;
 };
 
 #endif

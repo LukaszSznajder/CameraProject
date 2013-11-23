@@ -48,6 +48,7 @@ Interface::Interface(){
 	LCD.noCursor();
 	lcd.currentPage = mainMenuPage1;
 	lcd.cursorLine = 0;
+	lcd.setContent();
 	lcd.lcdRefresh(LCD);
 }
 

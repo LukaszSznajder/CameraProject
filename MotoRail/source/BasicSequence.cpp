@@ -19,8 +19,8 @@ BasicSequence::BasicSequence(){
 
 void BasicSequence::runBasicSequence(Parameters _parameters){
 	parameters = _parameters;
-	long timeStart;
-	long timeFinish;
+	long timeStart = 0;
+	long timeFinish = 0;
 
 	
 	//basicMoveDelay

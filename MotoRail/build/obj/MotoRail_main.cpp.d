@@ -12,7 +12,6 @@
   D:\arduino-1.0\hardware\arduino\cores\arduino/Printable.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/new.h \
   D:\arduino-1.0\hardware\arduino\variants\standard/pins_arduino.h \
-  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/motorInstructions.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/Parameters.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/BasicSequence.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/LcdDevice.h \

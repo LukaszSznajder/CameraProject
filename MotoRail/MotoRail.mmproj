@@ -1,8 +1,8 @@
-<mm_project serial_port="COM3" board="Arduino Duemilanove w/ ATmega328" programmer="" includePaths="" libPaths="" libs="" default="yes" useCodeAutomation="yes" linkPrintfVersion="1" serialPortSpeed="" >
+<mm_project serial_port="COM6" board="Arduino Uno" programmer="" includePaths="" libPaths="" libs="" default="yes" useCodeAutomation="yes" linkPrintfVersion="1" serialPortSpeed="" >
   <files>
     <file name="MotoRail_main.cpp" open="no" />
     <file name="motorail_main.h" open="no" />
-    <file name="LcdDevice.h" open="no" />
+    <file name="LcdDevice.h" open="yes" />
     <file name="LcdDevice.cpp" open="yes" />
     <file name="Buttons.cpp" open="no" />
     <file name="Buttons.h" open="no" />
@@ -10,11 +10,9 @@
     <file name="Interface.cpp" open="yes" />
     <file name="BigEasyDriver.cpp" open="no" />
     <file name="BigEasyDriver.h" open="no" />
-    <file name="motorInstructions.cpp" open="no" />
-    <file name="motorInstructions.h" open="no" />
     <file name="BasicSequence.cpp" open="yes" />
     <file name="BasicSequence.h" open="no" />
-    <file name="Parameters.h" open="no" />
+    <file name="Parameters.h" open="yes" />
   </files>
   <extras>
   </extras>

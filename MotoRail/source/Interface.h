@@ -2,7 +2,6 @@
 #define Interface_h
 
 #include "Arduino.h"
-#include "motorInstructions.h"
 #include "Parameters.h"
 #include "BasicSequence.h"
 

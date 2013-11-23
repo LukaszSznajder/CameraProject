@@ -24,6 +24,7 @@ void MotorDriver::Execute(char * instruction, float value){
 	if((*instruction == 'M') && (*(instruction + 1) == 'M')){
 		_currentLocation = _currentLocation + value;
 		if(_debugMode){
+			Serial.println("////////////////////////////////");
 			Serial.print("Moving by: "); Serial.println(value);
 		}
 		MotorX.doMove(value);

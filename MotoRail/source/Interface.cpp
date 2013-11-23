@@ -3,6 +3,7 @@
 #include "LcdDevice.h"
 #include "Buttons.h"
 #include "BigEasyDriver.h"
+#include "BasicSequence.h"
 
 #define lineUp 3
 #define lineDown 2
@@ -144,25 +145,25 @@ void Interface::interfaceRefresh(){
 		case left:
 // Simple Move
 			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
-				lcd.manualSpeed = lcd.manualSpeed - 500;
+				lcd.parameters.manualSpeed = lcd.parameters.manualSpeed - 500;
 			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
-				lcd.manualPercent = lcd.manualPercent - 5;
+				lcd.parameters.manualPercent = lcd.parameters.manualPercent - 5;
 // Smart Sequence
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
-				lcd.smartFps = lcd.smartFps - incrementSize; 
+				lcd.parameters.smartFps = lcd.parameters.smartFps - incrementSize; 
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
-				lcd.smartOutputDuration = lcd.smartOutputDuration - incrementSize;
+				lcd.parameters.smartOutputDuration = lcd.parameters.smartOutputDuration - incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
-				lcd.smartEventDuration = lcd.smartEventDuration - incrementSize;
+				lcd.parameters.smartEventDuration = lcd.parameters.smartEventDuration - incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.samrtMovementRange = lcd.samrtMovementRange - incrementSize;
+				lcd.parameters.samrtMovementRange = lcd.parameters.samrtMovementRange - incrementSize;
 // Basic Sequence	
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
-				lcd.basicMoveDelay = lcd.basicMoveDelay - incrementSize;
+				lcd.parameters.basicMoveDelay = lcd.parameters.basicMoveDelay - incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
-				lcd.basicMoveFrames = lcd.basicMoveFrames - incrementSize;
+				lcd.parameters.basicMoveFrames = lcd.parameters.basicMoveFrames - incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage2 && lcd.cursorPosition==0)
-				lcd.basicMoveRange = lcd.basicMoveRange - incrementSize;
+				lcd.parameters.basicMoveRange = lcd.parameters.basicMoveRange - incrementSize;
 			btn.button = 0;
 			lcd.lcdRefresh(LCD);
 			break;
@@ -171,25 +172,25 @@ void Interface::interfaceRefresh(){
 		case right:
 // Simple Move
 			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
-				lcd.manualSpeed = lcd.manualSpeed + 500;
+				lcd.parameters.manualSpeed = lcd.parameters.manualSpeed + 500;
 			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
-				lcd.manualPercent = lcd.manualPercent + 5;
+				lcd.parameters.manualPercent = lcd.parameters.manualPercent + 5;
 // Smart Sequence				
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
-				lcd.smartFps = lcd.smartFps + incrementSize; 			
+				lcd.parameters.smartFps = lcd.parameters.smartFps + incrementSize; 			
 			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
-				lcd.smartOutputDuration = lcd.smartOutputDuration + incrementSize;
+				lcd.parameters.smartOutputDuration = lcd.parameters.smartOutputDuration + incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
-				lcd.smartEventDuration = lcd.smartEventDuration + incrementSize;
+				lcd.parameters.smartEventDuration = lcd.parameters.smartEventDuration + incrementSize;
 			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.samrtMovementRange = lcd.samrtMovementRange + incrementSize;
+				lcd.parameters.samrtMovementRange = lcd.parameters.samrtMovementRange + incrementSize;
 // Basic Sequence	
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
-				lcd.basicMoveDelay = lcd.basicMoveDelay + incrementSize;
+				lcd.parameters.basicMoveDelay = lcd.parameters.basicMoveDelay + incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
-				lcd.basicMoveFrames = lcd.basicMoveFrames + incrementSize;
+				lcd.parameters.basicMoveFrames = lcd.parameters.basicMoveFrames + incrementSize;
 			else if(lcd.currentPage==SequenceBasicPage2 && lcd.cursorPosition==0)
-				lcd.basicMoveRange = lcd.basicMoveRange + incrementSize;
+				lcd.parameters.basicMoveRange = lcd.parameters.basicMoveRange + incrementSize;
 			btn.button = 0;	
 			lcd.lcdRefresh(LCD);																																			
 			break;
@@ -242,11 +243,33 @@ MAIN MENU Page 2:
 						default: break;
 					}
 					break;
-	//Simple Move
+//SMART SEQUENCE PAGE
+				case  SmartSequencePage2:
+				switch (lcd.cursorPosition){
+						case 0: 
+							break;
+						case 1:
+							//start
+							break;
+						default: break;
+					}
+					break;
+//BASIC SEQUENCE
+				case  SequenceBasicPage2:
+				switch (lcd.cursorPosition){
+						case 0: 
+							break;
+						case 1:
+							basicSequence.runBasicSequence(lcd.parameters);
+							break;
+						default: break;
+					}
+					break;
+//SIMPLE MOVE				
 				case  SimpleMove:
 					motor.setRampSteps(rampStepsSimpleMove);
-					motor.setSps(lcd.manualSpeed);
-					motor.doAbsolutePercent(lcd.manualPercent);
+					motor.setSps(lcd.parameters.manualSpeed);
+					motor.doAbsolutePercent(lcd.parameters.manualPercent);
 					break;
 				default:
 					break;
@@ -267,7 +290,6 @@ MAIN MENU Page 2:
 			break;
 	}
 }
-
 
 void Interface::buttonsRefresh(){
 	btn.scanButtons();

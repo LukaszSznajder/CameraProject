@@ -1,6 +1,7 @@
-d:\arduino\ work\TLM01\build\obj\Tlm.cpp.o:  \
- d:\arduino\ work\TLM01\source\Tlm.cpp \
-  d:\arduino\ work\TLM01\source\/Tlm.h \
+ \
+ c:\users\lukasz\documents\github\cameraproject\tests\TLM01\build\obj\Tlm.cpp.o:  \
+ c:\users\lukasz\documents\github\cameraproject\tests\TLM01\source\Tlm.cpp \
+  c:\users\lukasz\documents\github\cameraproject\tests\TLM01\source\/Tlm.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/arduino.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/binary.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/WCharacter.h \

@@ -1,5 +1,6 @@
-d:\arduino\ work\TLM01\build\obj\BigEasyDriver.cpp.o:  \
- d:\arduino\ work\TLM01\source\BigEasyDriver.cpp \
+ \
+ c:\users\lukasz\documents\github\cameraproject\tests\TLM01\build\obj\BigEasyDriver.cpp.o:  \
+ c:\users\lukasz\documents\github\cameraproject\tests\TLM01\source\BigEasyDriver.cpp \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Arduino.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/binary.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/WCharacter.h \
@@ -10,4 +11,4 @@ d:\arduino\ work\TLM01\build\obj\BigEasyDriver.cpp.o:  \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Printable.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/new.h \
   D:\arduino-1.0\hardware\arduino\variants\standard/pins_arduino.h \
-  d:\arduino\ work\TLM01\source\/BigEasyDriver.h
+  c:\users\lukasz\documents\github\cameraproject\tests\TLM01\source\/BigEasyDriver.h

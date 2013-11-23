@@ -15,8 +15,8 @@
 int backLight = 8;    // pin 8 will control the backlight
 int btnPin = 17;
 int btn = 0;
-int camTr = 16;
-int camFc = 15;
+int camTr = 15;
+int camFc = 16;
 int led1 = 12;
 int led2 = 13;
 int sStep = 18;
@@ -84,14 +84,17 @@ void loop() {
     else if(btnVal<900 && btnVal>700){
       btn = 1;
       digitalWrite(backLight, HIGH);
-      digitalWrite(camTr, HIGH);
+      digitalWrite(camFc, HIGH);
     }
     else if(btnVal<700 && btnVal>600){
       btn = 2;
+		//int camTr = 15;
+		//int camFc = 16;
+      
       digitalWrite(backLight, HIGH);
-      digitalWrite(camTr, HIGH);
-      delay(500);
       digitalWrite(camFc, HIGH);
+      delay(500);
+      digitalWrite(camTr, HIGH);
     }
     else if(btnVal<600 && btnVal>400){
       btn = 3;

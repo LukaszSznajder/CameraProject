@@ -1,4 +1,5 @@
-d:\arduino\ work\Blink\build\obj\LiquidCrystal.cpp.o:  \
+ \
+ c:\users\lukasz\documents\github\cameraproject\tests\Blink\build\obj\LiquidCrystal.cpp.o:  \
  D:\arduino-1.0\libraries\LiquidCrystal\LiquidCrystal.cpp \
   D:\arduino-1.0\libraries\LiquidCrystal\/LiquidCrystal.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h \

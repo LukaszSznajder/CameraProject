@@ -1,24 +1,18 @@
 #ifndef LcdDevice_h
 #define LcdDevice_h
 #include "LiquidCrystal.h"
+#include "Parameters.h"
 
 #include "Arduino.h"
 
 class LcdDevice{
 public:
+
+	Parameters parameters;
 	LcdDevice(LiquidCrystal LCD);
 	void lcdRefresh(LiquidCrystal LCD);
 	void zeroValues();
 	void lcdClear(LiquidCrystal LCD);
-	int manualPercent;
-	int manualSpeed;
-	int smartFps;
-	int smartOutputDuration;
-	int smartEventDuration;
-	int samrtMovementRange;
-	int basicMoveDelay;
-	int basicMoveFrames;
-	int basicMoveRange;
 	
 	bool startFlag;
 	int lcdButton;
@@ -39,8 +33,7 @@ public:
 private:
 	int _previousPage;
 	int _previousCursorLine;
-	
-
 };
+
 
 #endif

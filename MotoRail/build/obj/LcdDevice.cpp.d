@@ -13,4 +13,6 @@
   D:\arduino-1.0\hardware\arduino\variants\standard/pins_arduino.h \
   c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/LcdDevice.h \
   D:\arduino-1.0\libraries\LiquidCrystal/LiquidCrystal.h \
-  D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h
+  D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h \
+  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/Parameters.h \
+  c:\users\lukasz\documents\github\cameraproject\MotoRail\source\/Parameters.h

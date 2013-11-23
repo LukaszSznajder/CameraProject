@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "LcdDevice.h"
 #include "LiquidCrystal.h"
+#include "Parameters.h"
 
 #define backLightPin 8
 
@@ -33,15 +34,15 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	LCD.setCursor(0, 1); // (column, row)
 	LCD.print("v0.1");
 	
-	manualPercent = 0;
-	smartFps = 0;
-	manualSpeed = 10000;
-	smartOutputDuration = 0;
-	smartEventDuration = 0;
-	samrtMovementRange = 0;
-	basicMoveDelay = 0;
-	basicMoveFrames = 0;
-	basicMoveRange = 0;
+	parameters.manualPercent = 0;
+	parameters.smartFps = 0;
+	parameters.manualSpeed = 8000;
+	parameters.smartOutputDuration = 0;
+	parameters.smartEventDuration = 0;
+	parameters.samrtMovementRange = 0;
+	parameters.basicMoveDelay = 0;
+	parameters.basicMoveFrames = 600;
+	parameters.basicMoveRange = 0;
 	startFlag = 0;
 	currentPage = 0;
 	cursorLine = 0;
@@ -89,10 +90,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			case SimpleMove:
 				LCD.setCursor(0, 0); // (column, row)
 				LCD.print(" Speed: ");
-				LCD.print(manualSpeed);
+				LCD.print(parameters.manualSpeed);
 				LCD.setCursor(0, 1);
 				LCD.print(" Position: ");
-				LCD.print(manualPercent);
+				LCD.print(parameters.manualPercent);
 				LCD.print(" %");
 				LCD.setCursor(cursorColumn, cursorPosition);
 				LCD.print(">");
@@ -103,11 +104,11 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			case SmartSequencePage1:
 				LCD.setCursor(0, 0); // (column, row)
 				LCD.print(" FPS:");
-				LCD.print(smartFps);
+				LCD.print(parameters.smartFps);
 				LCD.print(" #");
 				LCD.setCursor(0, 1);
 				LCD.print(" Output:");
-				LCD.print(smartOutputDuration);
+				LCD.print(parameters.smartOutputDuration);
 				LCD.print(" s");
 				LCD.setCursor(cursorColumn, cursorPosition);
 				LCD.print(">");
@@ -117,11 +118,11 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			case SmartSequencePage2:
 				LCD.setCursor(0, 0); // (column, row)
 				LCD.print(" Event:");
-				LCD.print(smartEventDuration);
+				LCD.print(parameters.smartEventDuration);
 				LCD.print(" min");
 				LCD.setCursor(0, 1);
 				LCD.print(" Range:");
-				LCD.print(samrtMovementRange);
+				LCD.print(parameters.samrtMovementRange);
 				LCD.print(" %");
 				LCD.setCursor(cursorColumn, cursorPosition);
 				LCD.print(">");
@@ -150,11 +151,11 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			case SequenceBasicPage1:
 				LCD.setCursor(0, 0); // (column, row)
 				LCD.print(" Delay:");
-				LCD.print(basicMoveDelay);
+				LCD.print(parameters.basicMoveDelay);
 				LCD.print(" s");
 				LCD.setCursor(0, 1);
 				LCD.print(" Frames:");
-				LCD.print(basicMoveFrames);
+				LCD.print(parameters.basicMoveFrames);
 				LCD.print(" #");
 				LCD.setCursor(cursorColumn, cursorPosition);
 				LCD.print(">");
@@ -164,7 +165,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			case SequenceBasicPage2:
 				LCD.setCursor(0, 0); // (column, row)
 				LCD.print(" Move:");
-				LCD.print(basicMoveRange);
+				LCD.print(parameters.basicMoveRange);
 				LCD.print(" cm");
 				LCD.setCursor(0, 1);
 				LCD.print(" Start");
@@ -201,13 +202,13 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 }
 
 void LcdDevice::zeroValues(){
-	smartFps = 0;
-	smartOutputDuration = 0;
-	smartEventDuration = 0;
-	samrtMovementRange = 0;
-	basicMoveDelay = 0;
-	basicMoveFrames = 0;
-	basicMoveRange = 0;
+	parameters.smartFps = 0;
+	parameters.smartOutputDuration = 0;
+	parameters.smartEventDuration = 0;
+	parameters.samrtMovementRange = 0;
+	parameters.basicMoveDelay = 0;
+	parameters.basicMoveFrames = 0;
+	parameters.basicMoveRange = 0;
 	startFlag = 0;
 }
 

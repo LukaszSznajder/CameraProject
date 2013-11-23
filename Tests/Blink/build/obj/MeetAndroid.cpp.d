@@ -1,5 +1,6 @@
-d:\arduino\ work\Blink\build\obj\MeetAndroid.cpp.o:  \
- d:\arduino\ work\Blink\source\MeetAndroid.cpp \
+ \
+ c:\users\lukasz\documents\github\cameraproject\tests\Blink\build\obj\MeetAndroid.cpp.o:  \
+ c:\users\lukasz\documents\github\cameraproject\tests\Blink\source\MeetAndroid.cpp \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Arduino.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/binary.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/WCharacter.h \
@@ -11,5 +12,5 @@ d:\arduino\ work\Blink\build\obj\MeetAndroid.cpp.o:  \
   D:\arduino-1.0\hardware\arduino\cores\arduino/new.h \
   D:\arduino-1.0\hardware\arduino\variants\standard/pins_arduino.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/HardwareSerial.h \
-  d:\arduino\ work\Blink\source\/MeetAndroid.h \
+  c:\users\lukasz\documents\github\cameraproject\tests\Blink\source\/MeetAndroid.h \
   D:\arduino-1.0\hardware\arduino\cores\arduino/Print.h

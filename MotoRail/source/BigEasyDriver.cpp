@@ -7,20 +7,21 @@
 
 #define debugMode true
 
-#define distRot 5.093
+#define distRot 5.093 //cm
 #define steepsPerRev 6400
 #define gearRadius 0.7958
-#define fullLength 72
-#define fullSpeed 4000
+#define fullLength 72 //cm
+#define fullSpeed 4000 // steps/s
+#define distPerStep 0.0007953125 //cm
 
 bool _checkFlag;
 int _stepCount;
 
 #define clk 16000000
 #define n 8
-#define stSpeed 1000
+#define stSpeed 1500
 #define ramp 0.1 //Not used.
-#define rampStep 500
+#define rampStep 200
 
 BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 	pinMode(dirPin, OUTPUT);
@@ -29,7 +30,7 @@ BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 	_invDir = -1;
 	_stepPin = stepPin;
 	_dir = true;
-	_lineSpeed = 1;
+	_lineSpeed = 0;
 	_debugMode = debugMode;
 	_fullLength = fullLength;
 	_sps = 0;
@@ -56,6 +57,10 @@ void BigEasyDriver::doStep(double steps){
 
     digitalWrite(_dirPin,_dir);
     delay(50);
+    
+    if(_lineSpeed != 0){
+		_sps = _lineSpeed/distPerStep;
+    }
 
     float rampSteps = rampStep;
     //float rampSteps = steps * ramp;
@@ -67,7 +72,7 @@ void BigEasyDriver::doStep(double steps){
     float steadyPeriod = (1000000 * 1/_sps);
 
     // if less steps then 3x ramp steps
-    if(steps < rampSteps*3){
+    if(steps < rampSteps*2){
     	steadyPeriod = startPeriod;
     	steadySteps = steps;
     	rampSteps = 0;
@@ -81,6 +86,7 @@ void BigEasyDriver::doStep(double steps){
     int delayPeriod = startPeriod;
 
     inc = (steadyPeriod - startPeriod)/(rampSteps);
+    
 
     // RAMP UP
     if(_debugMode){
@@ -93,19 +99,16 @@ void BigEasyDriver::doStep(double steps){
     	Serial.print(" start delay per step: "); Serial.println(rampPeriod);
     	Serial.print(" delay increment: "); Serial.println(inc);
     }
-    for(int i = 0;i<rampSteps;i++){
-		for(int k=0;k<=1;k=k+0.1){
-		
-			inc = (inc - startPeriod)/(10);
-		
-			digitalWrite(_stepPin, HIGH);
-			delayMicroseconds(delayPeriod);
-			digitalWrite(_stepPin, LOW);
-			delayMicroseconds(delayPeriod);
-			rampPeriod = rampPeriod + inc*k;
-			delayPeriod = round(rampPeriod);
-		}
-    }
+    
+	for(int i = 0;i<rampSteps;i++){
+		digitalWrite(_stepPin, HIGH);
+		delayMicroseconds(delayPeriod);
+		digitalWrite(_stepPin, LOW);
+		delayMicroseconds(delayPeriod);
+		rampPeriod = rampPeriod + inc;
+		delayPeriod = round(rampPeriod);
+	}
+
 
     // STEADY SPEED
     if(_debugMode){

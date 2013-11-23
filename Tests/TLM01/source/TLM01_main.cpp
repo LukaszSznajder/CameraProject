@@ -17,7 +17,7 @@ description: <type what this file does>
 #define noDebug false
 #define LED 13
 
-SerialCom MySerial (debug);
+SerialCom MySerial (noDebug);
 MotorDriver X_axis (debug);
 //MeetAndroid meetAndroid;
 

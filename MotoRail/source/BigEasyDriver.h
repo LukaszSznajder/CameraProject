@@ -18,11 +18,11 @@ class BigEasyDriver{
     float convertDegToDistance(double deg);
     float convertRevToDistance(double rev);
 
-    void setSps(int sps); // steps per second, normaly 10000 is considered fast and 1000 slow
+    void setSps(int sps); // steps per second, normaly 10000 is considered fast and 1000 slow, 
+    void setLineSpeed(float lineSpeed); //in cm/s, will be used instead of Sps if not zero.
     void setDirection(bool dir); // true cw, false ccw
-    void setLineSpeed(float lineSpeed); //in cm/s, Not used!!!
     void invDirection(int invDir); //invert direction
-    void setRampSteps(int setRampSteps); 
+    void setRampSteps(int setRampSteps); //number of steps ramping up and down
     
   private:
     boolean _debugMode;

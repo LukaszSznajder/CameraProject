@@ -2,6 +2,7 @@
 #include "Buttons.h"
 
 #define buttonsPin 17
+#define threshold 200000
 
 Buttons::Buttons(){
 	pinMode(buttonsPin, INPUT);
@@ -22,6 +23,11 @@ void Buttons::scanButtons(){
 	btnValue = analogRead(buttonsPin);
 	whichButton1 = _whichButton(btnValue);
 	_currentTime = micros();
+	
+	if(threshold < (_currentTime - _pressedTime)){
+		_pressedTDel = 1000;
+	}
+	
 	if((whichButton1!=0) && (_currentTime>(_pressedTime+_pressedTDel))){
 		delay(_deBounceDelay);	
 		btnValue = analogRead(buttonsPin);

@@ -18,35 +18,6 @@
 #define SequenceBasicPage3 10
 #define ButtonDebug 11
 
-struct ScreenContent{
-		String menu1name;
-		String menu1page1line1;
-		String menu1page1line2;
-		String menu2name;
-		String menu2page1line1;
-		String menu2page1line2;
-		String menu2page2line1;
-		//myScreen.menu2.page2.line2 = " ";
-		//SIMPLE MOVE (Pages: 1)
-		String menu3name;
-		String menu3page1line1;
-		String menu3page1line2;
-		//SMART SEQUENCE (Pages: 4)
-		String menu4name;
-		String menu4page1line1;
-		String menu4page1line2;
-		String menu4page2line1;
-		String menu4page2line2;
-		String menu4page3line1;
-		//myScreen.menu4.page3.line2 = " ";
-		//BASIC SEQUENCE (Pages: 3)
-		String menu5name;
-		String menu5page1line1;
-		String menu5page1line2;
-		String menu5page2line1;
-		String menu5page2line2;
-};
-
 class LcdDevice{
 public:
 

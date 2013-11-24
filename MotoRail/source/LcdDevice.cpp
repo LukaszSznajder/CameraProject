@@ -19,8 +19,43 @@
 #define SequenceBasicPage2 9
 #define SequenceBasicPage3 10
 #define ButtonDebug 11
- 
-ScreenContent myScreen;
+
+//INTRO (Pages: 1)
+#define	myScreenmenu1name "Intro"
+#define	myScreenmenu1page1line1 "Motorized Rail"
+#define	myScreenmenu1page1line2 "v0.1"
+//MAIN MENU (Pages: 2)
+#define	myScreenmenu2name "Main Menu"
+	//page1
+#define	myScreenmenu2page1line1 " Simple Move"
+#define	myScreenmenu2page1line2 " Smart Sequence"
+	//page2
+#define	myScreenmenu2page2line1 " Basic Sequence"
+	//myScreen.menu2.page2.line2 = " ";
+//SIMPLE MOVE (Pages: 1)
+#define	myScreenmenu3name "Simple Move"
+	//page1
+#define	myScreenmenu3page1line1 " Speed:"
+#define	myScreenmenu3page1line2 " Position:"
+//SMART SEQUENCE (Pages: 4)
+#define	myScreenmenu4name "Smart Sequence"
+	//page1
+#define	myScreenmenu4page1line1 " FPS:"
+#define	myScreenmenu4page1line2 " Output:"
+	//page2
+#define	myScreenmenu4page2line1 " Event:"
+#define	myScreenmenu4page2line2 " Range:"
+	//page3
+#define	myScreenmenu4page3line1 " Start"
+	//myScreen.menu4.page3.line2 = " ";
+//BASIC SEQUENCE (Pages: 3)
+#define	myScreenmenu5name "Basic Sequence"
+	//page1
+#define	myScreenmenu5page1line1 " Delay:"
+#define	myScreenmenu5page1line2 " Frames:"
+	//page2
+#define	myScreenmenu5page2line1 " Move:"
+#define	myScreenmenu5page2line2 " Start"
  
 // initialize the library with the numbers of the interface pins
 //LiquidCrystal LCD(2, 3, 4, 5, 6, 7);
@@ -38,12 +73,12 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	 
 	parameters.manualPercent = 0;
 	parameters.smartFps = 0;
-	parameters.manualSpeed = 8000;
+	parameters.manualSpeed = 4000;
 	parameters.smartOutputDuration = 0;
 	parameters.smartEventDuration = 0;
 	parameters.samrtMovementRange = 0;
 	parameters.basicMoveDelay = 0;
-	parameters.basicMoveFrames = 600;
+	parameters.basicMoveFrames = 0;
 	parameters.basicMoveRange = 0;
 	startFlag = 0;
 	currentPage = 0;
@@ -56,42 +91,7 @@ void LcdDevice::lcdClear(LiquidCrystal LCD){
 }
  
 void LcdDevice::setContent(){
-//INTRO (Pages: 1)
-	myScreen.menu1name = "Intro";
-	myScreen.menu1page1line1 = "Motorized Rail";
-	myScreen.menu1page1line2 = "v0.1";
-//MAIN MENU (Pages: 2)
-	myScreen.menu2name = "Main Menu";
-	//page1
-	myScreen.menu2page1line1 = " Simple Move";
-	myScreen.menu2page1line2 = " Smart Sequence";
-	//page2
-	myScreen.menu2page2line1 = " Basic Sequence";
-	//myScreen.menu2.page2.line2 = " ";
-//SIMPLE MOVE (Pages: 1)
-	myScreen.menu3name ="Simple Move";
-	//page1
-	myScreen.menu3page1line1 = " Speed:";
-	myScreen.menu3page1line2 = " Position:";
-//SMART SEQUENCE (Pages: 4)
-	myScreen.menu4name = "Smart Sequence";
-	//page1
-	myScreen.menu4page1line1 = " FPS:";
-	myScreen.menu4page1line2 = " Output:";
-	//page2
-	myScreen.menu4page2line1 = " Event:";
-	myScreen.menu4page2line2 = " Range:";
-	//page3
-	myScreen.menu4page3line1 = " Start";
-	//myScreen.menu4.page3.line2 = " ";
-//BASIC SEQUENCE (Pages: 3)
-	myScreen.menu5name = "Basic Sequence";
-	//page1
-	myScreen.menu5page1line1 = " Delay:";
-	myScreen.menu5page1line2 = " Frames:";
-	//page2
-	myScreen.menu5page2line1 = " Move:";
-	myScreen.menu5page2line2 = " Start";
+
 }
  
 void LcdDevice::lcdRefresh(LiquidCrystal LCD){
@@ -101,18 +101,18 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 //1 INTRO (Pages: 1)
 		case intro:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu1page1line1);
+			LCD.print(myScreenmenu1page1line1);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu1page1line2);
+			LCD.print(myScreenmenu1page1line2);
 			lastPage = intro;
 			firstPage = intro;
 		break;
 //2 MAIN MENU (Pages: 2)
 		case mainMenuPage1:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu2page1line1);
+			LCD.print(myScreenmenu2page1line1);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu2page1line2);
+			LCD.print(myScreenmenu2page1line2);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
 			firstPage = mainMenuPage1;
@@ -120,7 +120,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			break;
 		case mainMenuPage2:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu2page2line1);
+			LCD.print(myScreenmenu2page2line1);
 			LCD.setCursor(0, 1);
 			LCD.print(" ");
 			LCD.setCursor(cursorColumn, cursorPosition);
@@ -131,10 +131,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 //3 SIMPLE MOVE (Pages: 1)
 		case SimpleMove:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu3page1line1);
+			LCD.print(myScreenmenu3page1line1);
 			LCD.print(parameters.manualSpeed);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu3page1line2);
+			LCD.print(myScreenmenu3page1line2);
 			LCD.print(parameters.manualPercent);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
@@ -144,10 +144,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 //4 SMART SEQUENCE (Pages: 4)
 		case SmartSequencePage1:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu4page1line1);
+			LCD.print(myScreenmenu4page1line1);
 			LCD.print(parameters.smartFps);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu4page1line2);
+			LCD.print(myScreenmenu4page1line2);
 			LCD.print(parameters.smartOutputDuration);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
@@ -156,10 +156,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			break;
 		case SmartSequencePage2:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu4page2line1);
+			LCD.print(myScreenmenu4page2line1);
 			LCD.print(parameters.smartEventDuration);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu4page2line2);
+			LCD.print(myScreenmenu4page2line2);
 			LCD.print(parameters.samrtMovementRange);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
@@ -168,7 +168,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			break;
 		case SmartSequencePage3:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu4page3line1);
+			LCD.print(myScreenmenu4page3line1);
 			LCD.setCursor(0, 1);
 			LCD.print(" ");
 			LCD.setCursor(cursorColumn, cursorPosition);
@@ -187,10 +187,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 //5 BASIC SEQUENCE (Pages: 3)
 		case SequenceBasicPage1:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu5page1line1);
+			LCD.print(myScreenmenu5page1line1);
 			LCD.print(parameters.basicMoveDelay);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu5page1line2);
+			LCD.print(myScreenmenu5page1line2);
 			LCD.print(parameters.basicMoveFrames);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
@@ -199,10 +199,10 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			break;
 		case SequenceBasicPage2:
 			LCD.setCursor(0, 0); // (column, row)
-			LCD.print(myScreen.menu5page2line1);
+			LCD.print(myScreenmenu5page2line1);
 			LCD.print(parameters.basicMoveRange);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu5page2line2);
+			LCD.print(myScreenmenu5page2line2);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
 			firstPage = SequenceBasicPage1;

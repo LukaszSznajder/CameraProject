@@ -12,7 +12,7 @@
 #define accept 6
 #define cancel 5
 
-#define rampStepsSimpleMove 500
+#define rampStepsSimpleMove 300
 
 #define intro 0
 #define mainMenuPage1 1
@@ -268,7 +268,9 @@ MAIN MENU Page 2:
 					break;
 //SIMPLE MOVE				
 				case  SimpleMove:
+				
 					motor.setRampSteps(rampStepsSimpleMove);
+					motor.moveTime = 0;
 					motor.setSps(lcd.parameters.manualSpeed);
 					motor.doAbsolutePercent(lcd.parameters.manualPercent);
 					break;

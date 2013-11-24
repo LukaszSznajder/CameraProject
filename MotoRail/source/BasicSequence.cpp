@@ -28,9 +28,8 @@ void BasicSequence::runBasicSequence(Parameters _parameters){
 	//basicMoveRange
 	
 	float intervalLenght = parameters.basicMoveRange/parameters.basicMoveFrames; //in cm
-	float lineSpeed = 10*intervalLenght/parameters.basicMoveDelay;
-	motorBS.setLineSpeed(lineSpeed); 
-	
+	float time = intervalLenght/parameters.basicMoveDelay;
+	motorBS.moveTime = time + 2; // in s
 	
 	if(debug){
 		Serial.println("-------STARTING SIMPLE MOVE, parameters:-------");
@@ -38,7 +37,7 @@ void BasicSequence::runBasicSequence(Parameters _parameters){
 		Serial.print("parameters.basicMoveFrames: "); Serial.println(parameters.basicMoveFrames);
 		Serial.print("parameters.basicMoveRange: "); Serial.println(parameters.basicMoveRange);
 		Serial.print("intervalLenght: "); Serial.println(intervalLenght);
-		Serial.print("lineSpeed: "); Serial.println(lineSpeed);
+		Serial.print("lineSpeed: "); Serial.println(time);
 	}
 	
 	digitalWrite(camFc, HIGH);

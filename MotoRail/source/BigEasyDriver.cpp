@@ -5,21 +5,22 @@
 
 #define pi 3.14159265359
 
-#define debugMode true
+#define debugMode false
 
 #define distRot 5.093 //cm
 #define steepsPerRev 6400
 #define gearRadius 0.7958
 #define fullLength 72 //cm
-#define maxSpeed 4000 // steps/s
+#define maxSpeed 6000 // steps/s
 #define distPerStep 0.0007953125 //cm
+#define delayOffset 50
 
 bool _checkFlag;
 int _stepCount;
 
 #define clk 16000000
 #define n 8
-#define stSpeed 1500
+#define stSpeed 500
 #define ramp 0.1 //Not used.
 #define rampStep 200
 
@@ -62,40 +63,54 @@ void BigEasyDriver::doStep(double totalSteps){
     float startSpeed;
 	float inc;
 	float startPeriod;
-	float rampPeriod;
 	double steadySteps;
 	float steadyPeriod;
-	int delayPeriod;
+	float stepPeriod;
 	//_sps
-	float moveTime;
 	float a, b, c, d;
 	float timeRamp;
 	float fullSpeed;
 	float Accel;
 	long int startTime;
     long int finishTime;
+    
+    long int startStepTime;
+    long int finishStepTime;
 	
 	startSpeed = stSpeed;
 	rampSteps = rampStep;
 	steadySteps = totalSteps - rampSteps * 2;
-	moveTime = 5;
-	fullSpeed = _sps;
 	
 	a = 2 * startSpeed;
 	b = steadySteps - moveTime*startSpeed - 2*totalSteps;
 	c = moveTime*(totalSteps - steadySteps);
 	d = sqrt(pow(b,2)-4*a*c);
-	timeRamp = ((-b) + d)/(2*a);
-	if(timeRamp>moveTime)
-		timeRamp = ((-b) - d)/(2*a);
+	timeRamp = ((-b) - d)/(2*a);
 		
 	fullSpeed = (2*rampSteps+timeRamp*startSpeed-2*startSpeed*timeRamp)/(timeRamp);
+	if(fullSpeed<startSpeed){
+		fullSpeed = startSpeed;
+		if(_debugMode){
+			Serial.println("NO ACCELERATION, TO SLOW!!!");
+		}
+	}
+	
+	if(moveTime == 0){
+		fullSpeed = _sps;
+	}
+	
+	if(fullSpeed>maxSpeed){
+		fullSpeed = maxSpeed;
+		if(_debugMode){
+			Serial.println("CAN NOT MEET DEADLINE, TO FAST!!!");
+		}
+	}
 	Accel = (fullSpeed - startSpeed)/timeRamp; //staps/s*s
 	
 	startPeriod = (1000000 * 1/startSpeed);
 	steadyPeriod = (1000000 * 1/fullSpeed);
-	rampPeriod = startPeriod;
-	delayPeriod = startPeriod;
+	
+	stepPeriod = startPeriod;//   - delayOffset;
 	
     inc = (steadyPeriod - startPeriod)/(rampSteps);
 
@@ -104,9 +119,11 @@ void BigEasyDriver::doStep(double totalSteps){
    
     // if less steps then 2x ramp steps
     if(totalSteps < rampSteps*2){
-    	steadyPeriod = startPeriod;
     	steadySteps = totalSteps;
     	rampSteps = 0;
+    	if(_debugMode){
+			Serial.println("NO ACCELERATION, TO SHORT!!!");
+		}
 	}
     
     // RAMP UP
@@ -116,29 +133,34 @@ void BigEasyDriver::doStep(double totalSteps){
     	Serial.print("Start speed: "); Serial.print(startSpeed); Serial.print(" Full speed: "); Serial.println(fullSpeed);
     	Serial.print("timeRamp: "); Serial.println(timeRamp);
     	Serial.print("fullSpeed: "); Serial.println(fullSpeed);
-    	Serial.print("Accel: "); Serial.println(Accel);
+    	Serial.print("AccelShould: "); Serial.println(Accel);
     	Serial.println("******************************");
     	Serial.println("//Ramping up");
-    	Serial.print(" steps: "); Serial.println(rampSteps);
-    	Serial.print(" start delay per step: "); Serial.println(rampPeriod);
-    	Serial.print(" delay increment: "); Serial.println(inc);
+    	Serial.print("steps: "); Serial.println(rampSteps);
+    	Serial.print("Start step period: "); Serial.print(stepPeriod); Serial.println(" microseconds");
+    	Serial.print("delay increment: "); Serial.println(inc);
     }
     
     startTime = millis();
     
 	for(int i = 0;i<rampSteps;i++){
+		//startStepTime = micros();
 		digitalWrite(_stepPin, HIGH);
-		delayMicroseconds(delayPeriod);
+		delayMicroseconds(round(stepPeriod/2)-delayOffset);
 		digitalWrite(_stepPin, LOW);
-		delayMicroseconds(delayPeriod);
-		rampPeriod = rampPeriod + inc;
-		delayPeriod = round(rampPeriod);
+		delayMicroseconds(round(stepPeriod/2-delayOffset));
+    	stepPeriod = stepPeriod + inc;
+    	//finishStepTime = micros();
 	}
 	
 	finishTime = millis();
-	float acceleration = (1000*(_sps - startSpeed))/((finishTime - startTime));
-    Serial.print(" Time: "); Serial.print(finishTime - startTime); Serial.println(" ms");
-    Serial.print(" Acceleration: "); Serial.print(acceleration); Serial.println(" steps/s^2");
+	
+	float acceleration = (1000*(fullSpeed - startSpeed))/((finishTime - startTime));
+	if(_debugMode){
+		Serial.print("Step Time: "); Serial.print(finishStepTime - startStepTime); Serial.println(" microseconds");
+		Serial.print(" Time: "); Serial.print(finishTime - startTime); Serial.println(" ms");
+		Serial.print(" AccelerationIs: "); Serial.print(acceleration); Serial.println(" steps/s^2");
+    }
 
     // STEADY SPEED
     if(_debugMode){
@@ -146,23 +168,27 @@ void BigEasyDriver::doStep(double totalSteps){
         Serial.println("--Constant speed");
         Serial.print(" steps: "); Serial.println(steadySteps);
         Serial.print(" Full speed: "); Serial.print(fullSpeed); Serial.println(" steps/s");
-        Serial.print(" Constant delay per step: "); Serial.print(rampPeriod); Serial.println(" microseconds");   
+        Serial.print(" Constant delay per step: "); Serial.print(stepPeriod); Serial.println(" microseconds");   
         Serial.print(" delay increment: "); Serial.print(" 0"); Serial.println(" microseconds");
     }
     startTime = millis();
     
     for(long i = 0;i<steadySteps;i++){
+		//startStepTime = micros();
     	digitalWrite(_stepPin, HIGH);
-    	delayMicroseconds(steadyPeriod);
+    	delayMicroseconds(round(stepPeriod/2)-delayOffset);
     	digitalWrite(_stepPin, LOW);
-    	delayMicroseconds(steadyPeriod);
+    	delayMicroseconds(round(stepPeriod/2)-delayOffset);
+    	stepPeriod = stepPeriod + 0;
+    	//finishStepTime = micros();
     }
     
     finishTime = millis();
-    Serial.print(" Time: "); Serial.print(finishTime - startTime); Serial.println(" ms");
-
+ 
     //RUMP DOWN
     if(_debugMode){
+		Serial.print("Step Time: "); Serial.print(finishStepTime - startStepTime); Serial.println(" microseconds");
+		Serial.print(" Time: "); Serial.print(finishTime - startTime); Serial.println(" ms");
     	Serial.println(" ------------------------------");
     	Serial.println("\\Ramping down");
     	Serial.print(" steps: "); Serial.println(rampSteps);
@@ -172,18 +198,20 @@ void BigEasyDriver::doStep(double totalSteps){
     startTime = millis();
     
     for(int i = 0;i<rampSteps;i++){
+		//startStepTime = micros();
     	digitalWrite(_stepPin, HIGH);
-    	delayMicroseconds(delayPeriod);
+    	delayMicroseconds(round(stepPeriod/2)-delayOffset);
     	digitalWrite(_stepPin, LOW);
-    	delayMicroseconds(delayPeriod);
-    	rampPeriod = rampPeriod - inc;
-    	delayPeriod = round(rampPeriod);
+    	delayMicroseconds(round(stepPeriod/2)-delayOffset);
+    	stepPeriod = stepPeriod - inc;
+    	//finishStepTime = micros();
     }
     
     finishTime = millis();
     
      if(_debugMode){
-        Serial.print(" End delay: "); Serial.println(rampPeriod); Serial.println(" microseconds");
+		Serial.print("Step Time: "); Serial.print(finishStepTime - startStepTime); Serial.println(" microseconds");
+        Serial.print(" End delay: "); Serial.println(stepPeriod); Serial.println(" microseconds");
         Serial.print(" delay increment: "); Serial.print(inc); Serial.println(" microseconds");
         Serial.print(" Time: "); Serial.print(finishTime - startTime); Serial.println(" ms");
     }

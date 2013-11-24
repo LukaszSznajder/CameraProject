@@ -4,12 +4,12 @@
     <file name="motorail_main.h" open="no" />
     <file name="LcdDevice.h" open="yes" />
     <file name="LcdDevice.cpp" open="yes" />
-    <file name="Buttons.cpp" open="no" />
+    <file name="Buttons.cpp" open="yes" />
     <file name="Buttons.h" open="no" />
     <file name="Interface.h" open="no" />
     <file name="Interface.cpp" open="yes" />
     <file name="BigEasyDriver.cpp" open="yes" />
-    <file name="BigEasyDriver.h" open="no" />
+    <file name="BigEasyDriver.h" open="yes" />
     <file name="BasicSequence.cpp" open="yes" />
     <file name="BasicSequence.h" open="no" />
     <file name="Parameters.h" open="yes" />

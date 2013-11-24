@@ -17,6 +17,7 @@ class BigEasyDriver{
     float convertStepsToDistance(double steps);
     float convertDegToDistance(double deg);
     float convertRevToDistance(double rev);
+    float moveTime;
 
     void setSps(int sps); // steps per second, normaly 10000 is considered fast and 1000 slow, 
     void setLineSpeed(float lineSpeed); //in cm/s, will be used instead of Sps if not zero.

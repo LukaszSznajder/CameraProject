@@ -11,7 +11,7 @@ class BigEasyDriver{
     void doRev(float rev); // approximatley 2 rev are 10 cm.
     void doDeg(float deg); //in deg
     void doMove(float distance); //in cm, to whole length of the rail is 72cm
-    void doStep(double steps); // steeps per rev 6400
+    void doStep(double totalSteps); // steeps per rev 6400
     void doAbsolutePercent(int percent);
     
     float convertStepsToDistance(double steps);

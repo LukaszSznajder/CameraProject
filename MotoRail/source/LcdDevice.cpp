@@ -134,7 +134,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			LCD.print(myScreen.menu3page1line1);
 			LCD.print(parameters.manualSpeed);
 			LCD.setCursor(0, 1);
-			LCD.print(myScreen.menu3page1line1);
+			LCD.print(myScreen.menu3page1line2);
 			LCD.print(parameters.manualPercent);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");

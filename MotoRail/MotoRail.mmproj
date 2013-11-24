@@ -8,7 +8,7 @@
     <file name="Buttons.h" open="no" />
     <file name="Interface.h" open="no" />
     <file name="Interface.cpp" open="yes" />
-    <file name="BigEasyDriver.cpp" open="no" />
+    <file name="BigEasyDriver.cpp" open="yes" />
     <file name="BigEasyDriver.h" open="no" />
     <file name="BasicSequence.cpp" open="yes" />
     <file name="BasicSequence.h" open="no" />

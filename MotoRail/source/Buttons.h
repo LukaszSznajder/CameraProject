@@ -9,6 +9,8 @@ public:
 	void scanButtons();
 	int button;
 	int pressed;
+	int multipleClicks;
+	long multiClickTime;
 	
 private:
 	int _whichButton(int btnVal);

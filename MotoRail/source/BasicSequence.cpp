@@ -5,7 +5,7 @@
 
 #define dirPin 19
 #define stepPin 18
-#define debug true
+#define debug false
 #define camTr 15
 #define camFc 16	
 #define fullLength 72 //cm

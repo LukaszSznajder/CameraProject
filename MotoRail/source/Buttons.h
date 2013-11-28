@@ -2,12 +2,12 @@
 #define Buttons_h
 
 #include "Arduino.h"
+#include "LcdDevice.h"
 
 class Buttons{
 public:
 	Buttons();
-	void scanButtons();
-	int button;
+	int scanButtons();
 	int pressed;
 	int multipleClicks;
 	long multiClickTime;

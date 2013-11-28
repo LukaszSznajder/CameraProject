@@ -5,7 +5,7 @@
 
 #define pi 3.14159265359
 
-#define debugMode true
+#define debugMode false
 
 #define distRot 5.093 //cm
 #define steepsPerRev 6400

@@ -25,6 +25,12 @@
 #define SequenceBasicPage1 8
 #define SequenceBasicPage2 9
 #define SequenceBasicPage3 10
+
+#define mainMenu 11
+#define SimpleMoveMenu 12
+#define SmartSequenceMenu 13
+#define SequenceBasicMenu 14
+
 #define ButtonDebug 11
 #define ledPin 13
 #define incrementSize 1
@@ -57,9 +63,9 @@ void Interface::clearAll(){
 }
 
 void Interface::debug(){
-	lcd.lcdButton = btn.button;
-	lcd.lcdPressed = lcd.currentPage;
-	lcd.lcdRefresh(LCD);
+	//lcd.lcdButton = btn.button;
+	//lcd.lcdPressed = lcd.currentPage;
+	//lcd.lcdRefresh(LCD);
 }
 
 /* Interface Navigation:
@@ -107,169 +113,54 @@ cursorPosition = 1 ->  (cursorLine = 4)
 -------------------------------------------------------
 */
 void Interface::interfaceRefresh(){
-	switch (btn.button){
+	switch (_button){
 // lineDown  	
 // (btn: 2)
 // if on First Page or on Last Page and cursor Position is Not 1 move cursor but don't skip line
 // if cursor position is 1 Move Page Down
-		case lineDown:
-			if(lcd.cursorPosition!=1){
-				lcd.cursorPosition = 1;		
-				lcd.cursorLine = lcd.cursorLine + 1;
-				lcd.lcdRefresh(LCD);
-			} else if(lcd.currentPage < lcd.lastPage){
-				lcd.cursorPosition = 0;
-				lcd.currentPage = lcd.currentPage + 1;
-				lcd.cursorLine = lcd.cursorLine + 1;
-				lcd.lcdRefresh(LCD);
-			}
-			btn.button = 0;
+		case lineDown: //(btn: 2)
+			lcd.moveLineDown();
+			lcd.lcdRefresh(LCD);
+			_button = 0;
 			break;
-// lineUp
-//(btn: 3)
-		case lineUp:
-			if(lcd.cursorPosition!=0){
-				lcd.cursorPosition = 0;
-				lcd.cursorLine = lcd.cursorLine - 1;
-				lcd.lcdRefresh(LCD);
-			} else if(lcd.currentPage > lcd.firstPage){
-				lcd.cursorPosition= 1;
-				lcd.currentPage = lcd.currentPage - 1; 
-				lcd.cursorLine = lcd.cursorLine - 1;
-				lcd.lcdRefresh(LCD);
-			}
-			btn.button = 0;
-			break;
-//  left 			
-//(btn: 1)
-
-		case left:
-// Simple Move
-			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
-				lcd.parameters.manualSpeed = lcd.parameters.manualSpeed - 500;
-			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
-				lcd.parameters.manualPercent = lcd.parameters.manualPercent - 5;
-// Smart Sequence
-			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
-				lcd.parameters.smartFps = lcd.parameters.smartFps - incrementSize; 
-			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
-				lcd.parameters.smartOutputDuration = lcd.parameters.smartOutputDuration - incrementSize;
-			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
-				lcd.parameters.smartEventDuration = lcd.parameters.smartEventDuration - incrementSize;
-			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.parameters.samrtMovementRange = lcd.parameters.samrtMovementRange - incrementSize;
-// Basic Sequence	
-			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
-				lcd.parameters.basicMoveDelay = lcd.parameters.basicMoveDelay - incrementSize;
-			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
-				lcd.parameters.basicMoveFrames = lcd.parameters.basicMoveFrames - incrementSize;
-			else if(lcd.currentPage==SequenceBasicPage2 && lcd.cursorPosition==0)
-				lcd.parameters.basicMoveRange = lcd.parameters.basicMoveRange - incrementSize;
-			btn.button = 0;
+		case lineUp: //(btn: 3)
+			lcd.moveLineUp();
+			lcd.lcdRefresh(LCD);
+			_button = 0;
+			break;			
+		case left: //(btn: 1)
+			lcd.decrementParameters();
+			_button = 0;
 			lcd.lcdRefresh(LCD);
 			break;
-// right 			
-//(btn: 4)
-		case right:
-// Simple Move
-			if(lcd.currentPage==SimpleMove && lcd.cursorPosition==0)
-				lcd.parameters.manualSpeed = lcd.parameters.manualSpeed + 500;
-			else if(lcd.currentPage==SimpleMove && lcd.cursorPosition==1)
-				lcd.parameters.manualPercent = lcd.parameters.manualPercent + 5;
-// Smart Sequence				
-			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==0)
-				lcd.parameters.smartFps = lcd.parameters.smartFps + incrementSize; 			
-			else if(lcd.currentPage==SmartSequencePage1 && lcd.cursorPosition==1)
-				lcd.parameters.smartOutputDuration = lcd.parameters.smartOutputDuration + incrementSize;
-			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==0)
-				lcd.parameters.smartEventDuration = lcd.parameters.smartEventDuration + incrementSize;
-			else if(lcd.currentPage==SmartSequencePage2 && lcd.cursorPosition==1)
-				lcd.parameters.samrtMovementRange = lcd.parameters.samrtMovementRange + incrementSize;
-// Basic Sequence	
-			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==0)
-				lcd.parameters.basicMoveDelay = lcd.parameters.basicMoveDelay + incrementSize;
-			else if(lcd.currentPage==SequenceBasicPage1 && lcd.cursorPosition==1)
-				lcd.parameters.basicMoveFrames = lcd.parameters.basicMoveFrames + incrementSize;
-			else if(lcd.currentPage==SequenceBasicPage2 && lcd.cursorPosition==0)
-				lcd.parameters.basicMoveRange = lcd.parameters.basicMoveRange + incrementSize;
-			btn.button = 0;	
+		case right: //(btn: 4)
+			lcd.incrementParameters();
+			_button = 0;	
 			lcd.lcdRefresh(LCD);																																			
 			break;
-// accept 			
-//(btn: 6)
-/*
-
-MAIN MENU Page 1:
-- Simple Move
-- Smart Sequence
-MAIN MENU Page 2:
-- Sequence Basic
-
-*/
-		case accept:
-			switch (lcd.currentPage){
-//MAIN MENU Page 1
-				case  mainMenuPage1:
-					lcd.previousPage = lcd.currentPage;
-					lcd.previousCursorLine = lcd.cursorLine;
-					lcd.previousCursorPosition = lcd.cursorPosition;
-					switch (lcd.cursorPosition){
-	//Simple Move
-						case 0: 
-							lcd.currentPage = SimpleMove;
-							lcd.cursorPosition = 0;
-							break;
-	//Smart Sequence
-						case 1: 
-							lcd.currentPage = SmartSequencePage1;
-							lcd.cursorPosition = 0;
-							break;
-						default: break;
+//ACCEPT//
+		case accept: //(btn: 6)
+			switch (lcd.currentMenu){
+				case  mainMenu:
+					lcd.storeMenu();
+					lcd.levelDown();
+					break;
+	//SMART//
+				case  SmartSequenceMenu:
+					if (lcd.cursorLine == 5){ 
+						digitalWrite(ledPin, HIGH);
+						motor = basicSequence.runSmartSequence(lcd.parameters, motor);
 					}
 					break;
-//MAIN MENU Page 2
-				case  mainMenuPage2:
-					lcd.previousPage = lcd.currentPage;
-					lcd.previousCursorLine = lcd.cursorLine;
-					lcd.previousCursorPosition = lcd.cursorPosition;
-					switch (lcd.cursorPosition){
-	//Sequence Basic
-						case 0: 
-							lcd.currentPage = SequenceBasicPage1;
-							lcd.cursorPosition = 0;
-							break;
-	//None
-						case 1:
-							break;
-						default: break;
+	//BASIC//
+				case  SequenceBasicMenu:
+					if(lcd.cursorLine == 4){
+						digitalWrite(ledPin, HIGH);
+						motor = basicSequence.runBasicSequence(lcd.parameters, motor);
 					}
 					break;
-//SMART SEQUENCE PAGE
-				case  SmartSequencePage3:
-				switch (lcd.cursorPosition){
-						case 0: 
-							motor = basicSequence.runSmartSequence(lcd.parameters, motor);
-							//start
-							break;
-						case 1:
-							break;
-						default: break;
-					}
-					break;
-//BASIC SEQUENCE
-				case  SequenceBasicPage2:
-				switch (lcd.cursorPosition){
-						case 0: 
-							break;
-						case 1:
-							motor = basicSequence.runBasicSequence(lcd.parameters, motor);
-							break;
-						default: break;
-					}
-					break;
-//SIMPLE MOVE				
-				case  SimpleMove:
-				
+	//SIMPLE//
+				case  SimpleMoveMenu:
 					motor.setRampSteps(rampStepsSimpleMove);
 					motor.moveTime = 0;
 					motor.setSps(lcd.parameters.manualSpeed);
@@ -278,16 +169,12 @@ MAIN MENU Page 2:
 				default:
 					break;
 				}
-			btn.button = 0;
+			_button = 0;
 			lcd.lcdRefresh(LCD);
-			break;
-// back/cancel 		
-//  (btn: 5)
-		case cancel:
-			lcd.currentPage = lcd.previousPage;
-			lcd.cursorLine = lcd.previousCursorLine;
-			lcd.cursorPosition = lcd.previousCursorPosition;
-			btn.button = 0;
+			break;		
+		case cancel: //  (btn: 5)
+			lcd.restoreMenu();
+			_button = 0;
 			lcd.lcdRefresh(LCD);
 			break;
 		default:
@@ -296,7 +183,7 @@ MAIN MENU Page 2:
 }
 
 void Interface::buttonsRefresh(){
-	btn.scanButtons();
+	_button = btn.scanButtons();
 }
 
 void Interface::updateMotorInstructions(){

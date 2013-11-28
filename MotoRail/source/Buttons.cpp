@@ -1,16 +1,29 @@
 #include "Arduino.h"
 #include "Buttons.h"
+#include "LcdDevice.h"
 
 #define buttonsPin 17
 #define threshold 200000
 
+#define intro 0
+#define mainMenuPage1 1
+#define mainMenuPage2 2
+#define SimpleMove 3
+#define SmartSequencePage1 4
+#define SmartSequencePage2 5
+#define SmartSequencePage3 6
+#define SmartSequencePage4 7
+#define SequenceBasicPage1 8
+#define SequenceBasicPage2 9
+#define SequenceBasicPage3 10
+
 Buttons::Buttons(){
 	pinMode(buttonsPin, INPUT);
 	digitalWrite(buttonsPin, HIGH);
-	button = 0;
 }
 
-void Buttons::scanButtons(){
+int Buttons::scanButtons(){
+	int button = 0;
 
 	int btnValue;
 	int whichButton1;
@@ -48,6 +61,8 @@ void Buttons::scanButtons(){
 				_pressedTime = micros();
 		}
 	}
+	
+	return(button);
 }
 
 int Buttons::_whichButton(int btnVal){ 

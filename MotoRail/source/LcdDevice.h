@@ -35,18 +35,29 @@ public:
 	
 	int cursorLine;
 	int cursorPosition;
-	
 	int currentPage;
+	int currentMenu;
 	int lastPage;
 	int firstPage;
 	
 	int previousPage;
 	int previousCursorLine;
 	int previousCursorPosition;
+	
+	void incrementParameters();
+	void decrementParameters();
+	
+	void moveLineDown();
+	void moveLineUp();
+	void levelDown();
+	void levelUp();
+	void storeMenu();
+	void restoreMenu();
 
 private:
 	int _previousPage;
 	int _previousCursorLine;
+	
 };
 
 //INTRO (Pages: 1)

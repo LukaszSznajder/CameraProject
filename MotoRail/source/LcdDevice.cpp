@@ -19,6 +19,11 @@
 #define SequenceBasicPage2 9
 #define SequenceBasicPage3 10
 #define ButtonDebug 11
+#define incrementSize 1
+#define mainMenu 11
+#define SimpleMoveMenu 12
+#define SmartSequenceMenu 13
+#define SequenceBasicMenu 14
 
 //INTRO (Pages: 1)
 #define	myScreenmenu1name "Intro"
@@ -82,6 +87,7 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	parameters.basicMoveRange = 0;
 	startFlag = 0;
 	currentPage = 0;
+	currentMenu = mainMenu;
 	cursorLine = 0;
 	forceRefresh = false;
 }
@@ -232,6 +238,131 @@ void LcdDevice::zeroValues(){
 	parameters.basicMoveRange = 0;
 	startFlag = 0;
 }
+
+void LcdDevice::incrementParameters(){
+
+	if(currentPage==SimpleMove && cursorPosition==0)
+				parameters.manualSpeed = parameters.manualSpeed + 500;
+			else if(currentPage==SimpleMove && cursorPosition==1)
+				parameters.manualPercent = parameters.manualPercent + 5;
+// Smart Sequence				
+			else if(currentPage==SmartSequencePage1 && cursorPosition==0)
+				parameters.smartFps = parameters.smartFps + incrementSize; 			
+			else if(currentPage==SmartSequencePage1 && cursorPosition==1)
+				parameters.smartOutputDuration = parameters.smartOutputDuration + incrementSize;
+			else if(currentPage==SmartSequencePage2 && cursorPosition==0)
+				parameters.smartEventDuration = parameters.smartEventDuration + incrementSize;
+			else if(currentPage==SmartSequencePage2 && cursorPosition==1)
+				parameters.samrtMovementRange = parameters.samrtMovementRange + incrementSize;
+// Basic Sequence	
+			else if(currentPage==SequenceBasicPage1 && cursorPosition==0)
+				parameters.basicMoveDelay = parameters.basicMoveDelay + incrementSize;
+			else if(currentPage==SequenceBasicPage1 && cursorPosition==1)
+				parameters.basicMoveFrames = parameters.basicMoveFrames + incrementSize;
+			else if(currentPage==SequenceBasicPage2 && cursorPosition==0)
+				parameters.basicMoveRange = parameters.basicMoveRange + incrementSize;
+}
+
+
+void LcdDevice::decrementParameters(){
+	if(currentPage==SimpleMove && cursorPosition==0)
+				parameters.manualSpeed = parameters.manualSpeed - 500;
+			else if(currentPage==SimpleMove && cursorPosition==1)
+				parameters.manualPercent = parameters.manualPercent - 5;
+// Smart Sequence
+			else if(currentPage==SmartSequencePage1 && cursorPosition==0)
+				parameters.smartFps = parameters.smartFps - incrementSize; 
+			else if(currentPage==SmartSequencePage1 && cursorPosition==1)
+				parameters.smartOutputDuration = parameters.smartOutputDuration - incrementSize;
+			else if(currentPage==SmartSequencePage2 && cursorPosition==0)
+				parameters.smartEventDuration = parameters.smartEventDuration - incrementSize;
+			else if(currentPage==SmartSequencePage2 && cursorPosition==1)
+				parameters.samrtMovementRange = parameters.samrtMovementRange - incrementSize;
+// Basic Sequence	
+			else if(currentPage==SequenceBasicPage1 && cursorPosition==0)
+				parameters.basicMoveDelay = parameters.basicMoveDelay - incrementSize;
+			else if(currentPage==SequenceBasicPage1 && cursorPosition==1)
+				parameters.basicMoveFrames = parameters.basicMoveFrames - incrementSize;
+			else if(currentPage==SequenceBasicPage2 && cursorPosition==0)
+				parameters.basicMoveRange = parameters.basicMoveRange - incrementSize;
+}
+
+void LcdDevice::moveLineDown(){
+	if(cursorPosition!=1){
+				cursorPosition = 1;		
+				cursorLine = cursorLine + 1;
+			} else if(currentPage < lastPage){
+				cursorPosition = 0;
+				currentPage = currentPage + 1;
+				cursorLine = cursorLine + 1;
+			}
+}
+
+void LcdDevice::moveLineUp(){
+	if(cursorPosition!=0){
+				cursorPosition = 0;
+				cursorLine = cursorLine - 1;
+			} else if(currentPage > firstPage){
+				cursorPosition= 1;
+				currentPage = currentPage - 1; 
+				cursorLine = cursorLine - 1;
+			}
+}
+
+void LcdDevice::levelDown(){
+	
+	cursorLine = 1;
+	if(currentPage == mainMenuPage1){
+	//Simple Move
+		switch(cursorPosition){
+			case 0: 
+				currentPage = SimpleMove;
+				currentMenu = SimpleMoveMenu;
+				cursorPosition = 0;
+				break;
+	//Smart Sequence
+			case 1: 
+				currentPage = SmartSequencePage1;
+				currentMenu = SmartSequenceMenu;
+				cursorPosition = 0;
+				break;
+			default: break;
+		}
+	}
+	else if(currentPage == mainMenuPage2){
+		switch(cursorPosition){
+			//Sequence Basic
+			case 0: 
+				currentPage = SequenceBasicPage1;
+				currentMenu = SequenceBasicMenu;
+				cursorPosition = 0;
+				break;
+			//None
+			case 1:
+				break;
+			default: break;
+		}
+	}
+}
+
+void LcdDevice::levelUp(){
+
+}
+
+void LcdDevice::storeMenu(){
+	previousPage = currentPage;
+	previousCursorLine = cursorLine;
+	previousCursorPosition = cursorPosition;
+}
+
+void LcdDevice::restoreMenu(){
+	currentPage = previousPage;
+	currentMenu = mainMenu;
+	cursorLine = previousCursorLine;
+	cursorPosition = previousCursorPosition;
+
+}
+
  
 /*
 //------------------------------------

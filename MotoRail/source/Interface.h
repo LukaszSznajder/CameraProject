@@ -16,6 +16,7 @@ public:
 	void debug();
 	void updateMotorInstructions();
 private:
+	int _button;
 };
 
 #endif

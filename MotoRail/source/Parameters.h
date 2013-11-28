@@ -8,7 +8,7 @@ struct Parameters{
 		int smartOutputDuration;
 		int smartEventDuration;
 		int samrtMovementRange;
-		int basicMoveDelay;
+		float basicMoveDelay;
 		float basicMoveFrames;
 		float basicMoveRange;
 };

@@ -11,7 +11,7 @@
     <file name="BigEasyDriver.cpp" open="yes" />
     <file name="BigEasyDriver.h" open="yes" />
     <file name="BasicSequence.cpp" open="yes" />
-    <file name="BasicSequence.h" open="no" />
+    <file name="BasicSequence.h" open="yes" />
     <file name="Parameters.h" open="yes" />
   </files>
   <extras>

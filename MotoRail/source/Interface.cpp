@@ -245,12 +245,13 @@ MAIN MENU Page 2:
 					}
 					break;
 //SMART SEQUENCE PAGE
-				case  SmartSequencePage2:
+				case  SmartSequencePage3:
 				switch (lcd.cursorPosition){
 						case 0: 
+							motor = basicSequence.runSmartSequence(lcd.parameters, motor);
+							//start
 							break;
 						case 1:
-							//start
 							break;
 						default: break;
 					}
@@ -261,7 +262,7 @@ MAIN MENU Page 2:
 						case 0: 
 							break;
 						case 1:
-							basicSequence.runBasicSequence(lcd.parameters);
+							motor = basicSequence.runBasicSequence(lcd.parameters, motor);
 							break;
 						default: break;
 					}

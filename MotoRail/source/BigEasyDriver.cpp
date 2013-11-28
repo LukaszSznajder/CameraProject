@@ -5,7 +5,7 @@
 
 #define pi 3.14159265359
 
-#define debugMode false
+#define debugMode true
 
 #define distRot 5.093 //cm
 #define steepsPerRev 6400
@@ -42,14 +42,14 @@ BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 
 void BigEasyDriver::doStep(double totalSteps){
 
-	if(debugMode){
+	if(_debugMode){
 		Serial.print("start_currentLocation: "); Serial.println(_currentLocation);
 	}
 	if(_dir)
 		_currentLocation = _currentLocation - BigEasyDriver::convertStepsToDistance(totalSteps);
 	else
 		_currentLocation = _currentLocation + BigEasyDriver::convertStepsToDistance(totalSteps);
-	if(debugMode){
+	if(_debugMode){
 		Serial.print("end_currentLocation: "); Serial.println(_currentLocation);
 		Serial.println("******************************");
 	}

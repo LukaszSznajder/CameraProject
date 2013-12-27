@@ -23,6 +23,7 @@
 //		simply delete the lines below, with "&MM_DECLA" text
 //===================================================================
 //---- DO NOT DELETE THIS LINE -- @MM_DECLA_BEG@---------------------
+void slider(byte flag, byte numOfValues);
 void loop();
 void setup();
 //---- DO NOT DELETE THIS LINE -- @MM_DECLA_END@---------------------

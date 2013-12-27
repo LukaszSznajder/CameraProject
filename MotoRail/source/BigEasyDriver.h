@@ -6,6 +6,7 @@
 class BigEasyDriver{
   public:
     BigEasyDriver(int dirPin, int stepPin);
+    BigEasyDriver();
     void setDebugMode(boolean debug);
 
     void doRev(float rev); // approximatley 2 rev are 10 cm.
@@ -14,6 +15,7 @@ class BigEasyDriver{
     void doStep(double totalSteps); // steeps per rev 6400
     void doAbsolutePercent(int percent);
     
+    double convertDistanceToSteps(float distance);
     float convertStepsToDistance(double steps);
     float convertDegToDistance(double deg);
     float convertRevToDistance(double rev);
@@ -24,6 +26,7 @@ class BigEasyDriver{
     void setDirection(bool dir); // true cw, false ccw
     void invDirection(int invDir); //invert direction
     void setRampSteps(int setRampSteps); //number of steps ramping up and down
+    float timeToMoveMaxSpeed(float distance, float frames);
     
   private:
     boolean _debugMode;

@@ -15,8 +15,11 @@ public:
 	void clearAll();
 	void debug();
 	void updateMotorInstructions();
+	void setBluetoothValue(float value);
 private:
 	int _button;
+	int long _currentTime;
+	int long _previousTime;
 };
 
 #endif

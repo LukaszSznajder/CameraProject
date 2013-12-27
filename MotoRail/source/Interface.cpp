@@ -9,10 +9,12 @@
 #define lineDown 2
 #define right 4
 #define left 1
+#define null 0
 #define accept 6
 #define cancel 5
 
 #define rampStepsSimpleMove 300
+#define lcdRefreshRate 250 //milliseconds
 
 #define intro 0
 #define mainMenuPage1 1
@@ -25,11 +27,14 @@
 #define SequenceBasicPage1 8
 #define SequenceBasicPage2 9
 #define SequenceBasicPage3 10
+#define BluetoothPage1 11
 
-#define mainMenu 11
-#define SimpleMoveMenu 12
-#define SmartSequenceMenu 13
-#define SequenceBasicMenu 14
+#define incrementSize 1
+#define mainMenu 12
+#define SimpleMoveMenu 13
+#define SmartSequenceMenu 14
+#define SequenceBasicMenu 15
+#define BluetoothMenu 16
 
 #define ButtonDebug 11
 #define ledPin 13
@@ -118,6 +123,12 @@ void Interface::interfaceRefresh(){
 // (btn: 2)
 // if on First Page or on Last Page and cursor Position is Not 1 move cursor but don't skip line
 // if cursor position is 1 Move Page Down
+		case 0:		
+			if((_previousTime + lcdRefreshRate < millis()) && (lcd.currentMenu == BluetoothMenu)){
+				lcd.lcdRefresh(LCD);
+				_previousTime = millis();
+			}
+			break;
 		case lineDown: //(btn: 2)
 			lcd.moveLineDown();
 			lcd.lcdRefresh(LCD);
@@ -189,4 +200,9 @@ void Interface::buttonsRefresh(){
 void Interface::updateMotorInstructions(){
 
 }
+
+void Interface::setBluetoothValue(float value){
+	lcd.setBluetoothValue(value);
+}
+
 

@@ -2,11 +2,14 @@
 #include "LcdDevice.h"
 #include "LiquidCrystal.h"
 #include "Parameters.h"
+#include "BigEasyDriver.h"
  
 #define backLightPin 8
  
 #define cursorColumn 0
- 
+
+#define shutterTime 1 
+
 #define intro 0
 #define mainMenuPage1 1
 #define mainMenuPage2 2
@@ -18,12 +21,14 @@
 #define SequenceBasicPage1 8
 #define SequenceBasicPage2 9
 #define SequenceBasicPage3 10
-#define ButtonDebug 11
+#define BluetoothPage1 11
+
 #define incrementSize 1
-#define mainMenu 11
-#define SimpleMoveMenu 12
-#define SmartSequenceMenu 13
-#define SequenceBasicMenu 14
+#define mainMenu 12
+#define SimpleMoveMenu 13
+#define SmartSequenceMenu 14
+#define SequenceBasicMenu 15
+#define BluetoothMenu 16
 
 //INTRO (Pages: 1)
 #define	myScreenmenu1name "Intro"
@@ -36,6 +41,7 @@
 #define	myScreenmenu2page1line2 " Smart Sequence"
 	//page2
 #define	myScreenmenu2page2line1 " Basic Sequence"
+#define	myScreenmenu2page2line2 " Bluetooth"
 	//myScreen.menu2.page2.line2 = " ";
 //SIMPLE MOVE (Pages: 1)
 #define	myScreenmenu3name "Simple Move"
@@ -61,6 +67,10 @@
 	//page2
 #define	myScreenmenu5page2line1 " Move:"
 #define	myScreenmenu5page2line2 " Start"
+//6 BLUETOOTH (Pages: 1)
+	//page1
+#define	myScreenmenu6page1line1 " Recieved:"
+#define	myScreenmenu6page1line2 " "
  
 // initialize the library with the numbers of the interface pins
 //LiquidCrystal LCD(2, 3, 4, 5, 6, 7);
@@ -82,8 +92,8 @@ LcdDevice::LcdDevice(LiquidCrystal LCD){
 	parameters.smartOutputDuration = 0;
 	parameters.smartEventDuration = 0;
 	parameters.samrtMovementRange = 0;
-	parameters.basicMoveDelay = 0;
-	parameters.basicMoveFrames = 0;
+	parameters.basicMoveDelay = 1;
+	parameters.basicMoveFrames = 1;
 	parameters.basicMoveRange = 0;
 	startFlag = 0;
 	currentPage = 0;
@@ -128,7 +138,7 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			LCD.setCursor(0, 0); // (column, row)
 			LCD.print(myScreenmenu2page2line1);
 			LCD.setCursor(0, 1);
-			LCD.print(" ");
+			LCD.print(myScreenmenu2page2line2);
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
 			firstPage = mainMenuPage1;
@@ -222,6 +232,18 @@ void LcdDevice::lcdRefresh(LiquidCrystal LCD){
 			LCD.setCursor(cursorColumn, cursorPosition);
 			LCD.print(">");
 			break;
+//6 BLUETOOTH (Pages: 1)
+		case BluetoothPage1:
+			LCD.setCursor(0, 0); // (column, row)
+			LCD.print(myScreenmenu6page1line1);
+			LCD.print(parameters.bluetoothValue);
+			LCD.setCursor(0, 1);
+			LCD.print(myScreenmenu6page1line2);
+			LCD.setCursor(cursorColumn, cursorPosition);
+			LCD.print(">");
+			firstPage = BluetoothPage1;
+			lastPage = BluetoothPage1;
+			break;
 		default:
 		break;
 	}
@@ -240,51 +262,69 @@ void LcdDevice::zeroValues(){
 }
 
 void LcdDevice::incrementParameters(){
-
+BigEasyDriver motorXX;
+// Simple Move
 	if(currentPage==SimpleMove && cursorPosition==0)
-				parameters.manualSpeed = parameters.manualSpeed + 500;
-			else if(currentPage==SimpleMove && cursorPosition==1)
-				parameters.manualPercent = parameters.manualPercent + 5;
+		parameters.manualSpeed = parameters.manualSpeed + 500;
+	else if(currentPage==SimpleMove && cursorPosition==1)
+		parameters.manualPercent = parameters.manualPercent + 5;
 // Smart Sequence				
-			else if(currentPage==SmartSequencePage1 && cursorPosition==0)
-				parameters.smartFps = parameters.smartFps + incrementSize; 			
-			else if(currentPage==SmartSequencePage1 && cursorPosition==1)
-				parameters.smartOutputDuration = parameters.smartOutputDuration + incrementSize;
-			else if(currentPage==SmartSequencePage2 && cursorPosition==0)
-				parameters.smartEventDuration = parameters.smartEventDuration + incrementSize;
-			else if(currentPage==SmartSequencePage2 && cursorPosition==1)
-				parameters.samrtMovementRange = parameters.samrtMovementRange + incrementSize;
+	else if(currentPage==SmartSequencePage1 && cursorPosition==0)
+		parameters.smartFps = parameters.smartFps + incrementSize; 			
+	else if(currentPage==SmartSequencePage1 && cursorPosition==1)
+		parameters.smartOutputDuration = parameters.smartOutputDuration + incrementSize;
+	else if(currentPage==SmartSequencePage2 && cursorPosition==0)
+		parameters.smartEventDuration = parameters.smartEventDuration + incrementSize;
+	else if(currentPage==SmartSequencePage2 && cursorPosition==1)
+		parameters.samrtMovementRange = parameters.samrtMovementRange + incrementSize;
 // Basic Sequence	
-			else if(currentPage==SequenceBasicPage1 && cursorPosition==0)
-				parameters.basicMoveDelay = parameters.basicMoveDelay + incrementSize;
-			else if(currentPage==SequenceBasicPage1 && cursorPosition==1)
-				parameters.basicMoveFrames = parameters.basicMoveFrames + incrementSize;
-			else if(currentPage==SequenceBasicPage2 && cursorPosition==0)
-				parameters.basicMoveRange = parameters.basicMoveRange + incrementSize;
+	else if(currentPage==SequenceBasicPage1 && cursorPosition==0)
+		parameters.basicMoveDelay = parameters.basicMoveDelay + incrementSize;
+	else if(currentPage==SequenceBasicPage1 && cursorPosition==1){
+		parameters.basicMoveFrames = parameters.basicMoveFrames + incrementSize;
+		if((motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime) > parameters.basicMoveDelay)
+			parameters.basicMoveDelay = round(0.5 + motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime);
+	}
+	else if(currentPage==SequenceBasicPage2 && cursorPosition==0){
+		parameters.basicMoveRange = parameters.basicMoveRange + incrementSize;
+		if((motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime) > parameters.basicMoveDelay)
+			parameters.basicMoveDelay = round(0.5 + motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime);
+	}
+// Basic Sequence
+
 }
 
 
 void LcdDevice::decrementParameters(){
+BigEasyDriver motorXX;
 	if(currentPage==SimpleMove && cursorPosition==0)
-				parameters.manualSpeed = parameters.manualSpeed - 500;
-			else if(currentPage==SimpleMove && cursorPosition==1)
-				parameters.manualPercent = parameters.manualPercent - 5;
+		parameters.manualSpeed = parameters.manualSpeed - 500;
+	else if(currentPage==SimpleMove && cursorPosition==1)
+		parameters.manualPercent = parameters.manualPercent - 5;
 // Smart Sequence
-			else if(currentPage==SmartSequencePage1 && cursorPosition==0)
-				parameters.smartFps = parameters.smartFps - incrementSize; 
-			else if(currentPage==SmartSequencePage1 && cursorPosition==1)
-				parameters.smartOutputDuration = parameters.smartOutputDuration - incrementSize;
-			else if(currentPage==SmartSequencePage2 && cursorPosition==0)
-				parameters.smartEventDuration = parameters.smartEventDuration - incrementSize;
-			else if(currentPage==SmartSequencePage2 && cursorPosition==1)
-				parameters.samrtMovementRange = parameters.samrtMovementRange - incrementSize;
+	else if(currentPage==SmartSequencePage1 && cursorPosition==0)
+		parameters.smartFps = parameters.smartFps - incrementSize; 
+	else if(currentPage==SmartSequencePage1 && cursorPosition==1)
+		parameters.smartOutputDuration = parameters.smartOutputDuration - incrementSize;
+	else if(currentPage==SmartSequencePage2 && cursorPosition==0)
+		parameters.smartEventDuration = parameters.smartEventDuration - incrementSize;
+	else if(currentPage==SmartSequencePage2 && cursorPosition==1)
+		parameters.samrtMovementRange = parameters.samrtMovementRange - incrementSize;
 // Basic Sequence	
-			else if(currentPage==SequenceBasicPage1 && cursorPosition==0)
-				parameters.basicMoveDelay = parameters.basicMoveDelay - incrementSize;
-			else if(currentPage==SequenceBasicPage1 && cursorPosition==1)
-				parameters.basicMoveFrames = parameters.basicMoveFrames - incrementSize;
-			else if(currentPage==SequenceBasicPage2 && cursorPosition==0)
-				parameters.basicMoveRange = parameters.basicMoveRange - incrementSize;
+	else if(currentPage==SequenceBasicPage1 && cursorPosition==0 && ((parameters.basicMoveDelay - incrementSize) >= 1)){
+		if((motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime) <= (parameters.basicMoveDelay - 1))
+			parameters.basicMoveDelay = parameters.basicMoveDelay - incrementSize;
+	}
+	else if(currentPage==SequenceBasicPage1 && cursorPosition==1 && (parameters.basicMoveFrames - incrementSize >= 1)){
+		parameters.basicMoveFrames = parameters.basicMoveFrames - incrementSize;
+		if((motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime) > parameters.basicMoveDelay)
+			parameters.basicMoveDelay = round(0.5 + motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime);
+	}
+	else if(currentPage==SequenceBasicPage2 && cursorPosition==0){
+		parameters.basicMoveRange = parameters.basicMoveRange - incrementSize;
+		if((motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime) > parameters.basicMoveDelay)
+			parameters.basicMoveDelay = round(0.5 + motorXX.timeToMoveMaxSpeed(parameters.basicMoveRange, parameters.basicMoveFrames) + shutterTime);
+	}
 }
 
 void LcdDevice::moveLineDown(){
@@ -331,14 +371,17 @@ void LcdDevice::levelDown(){
 	}
 	else if(currentPage == mainMenuPage2){
 		switch(cursorPosition){
-			//Sequence Basic
+	//Sequence Basic
 			case 0: 
 				currentPage = SequenceBasicPage1;
 				currentMenu = SequenceBasicMenu;
 				cursorPosition = 0;
 				break;
-			//None
+	//None
 			case 1:
+				currentPage = BluetoothPage1;
+				currentMenu = BluetoothMenu;
+				cursorPosition = 0;
 				break;
 			default: break;
 		}
@@ -362,6 +405,11 @@ void LcdDevice::restoreMenu(){
 	cursorPosition = previousCursorPosition;
 
 }
+
+void LcdDevice::setBluetoothValue(float value){
+	parameters.bluetoothValue = value;
+}
+
 
  
 /*

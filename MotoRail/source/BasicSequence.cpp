@@ -9,6 +9,7 @@
 #define camTr 15
 #define camFc 16	
 #define fullLength 72 //cm
+#define shutterTime 1
 
 //BigEasyDriver motorBS(dirPin, stepPin);
 
@@ -48,8 +49,8 @@ BigEasyDriver BasicSequence::runBasicSequence(Parameters _parameters, BigEasyDri
 	float intervalLenght = parameters.basicMoveRange/parameters.basicMoveFrames; //in cm
 	float time = parameters.basicMoveDelay;
 	
-	if(time - 1 > 0){
-		motorBS.moveTime = time - 1.5; // in s
+	if((time - shutterTime) > 0){
+		motorBS.moveTime = time - shutterTime; // in s
 	} else
 		motorBS.moveTime = time;
 	
@@ -75,6 +76,11 @@ BigEasyDriver BasicSequence::runBasicSequence(Parameters _parameters, BigEasyDri
 		timeStart = millis();
 		motorBS.doMove(intervalLenght);
 		
+		timeFinish = millis();
+		
+		if(((timeFinish + 800) - timeStart)<1000*parameters.basicMoveDelay)
+			delay(1000*parameters.basicMoveDelay-((timeFinish + 800) - timeStart));
+		
 		digitalWrite(camFc, HIGH);
 		delay(400);
 		digitalWrite(camTr, HIGH);
@@ -82,10 +88,6 @@ BigEasyDriver BasicSequence::runBasicSequence(Parameters _parameters, BigEasyDri
 		digitalWrite(camTr, LOW);
 		digitalWrite(camFc, LOW);
 		
-		timeFinish = millis();
-		
-		if((timeFinish - timeStart)<1000*parameters.basicMoveDelay)
-		delay(1000*parameters.basicMoveDelay-(timeFinish - timeStart));
 		
 		if(debug){
 			Serial.println("---------------------------");

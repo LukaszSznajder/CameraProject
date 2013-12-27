@@ -11,6 +11,7 @@ struct Parameters{
 		float basicMoveDelay;
 		float basicMoveFrames;
 		float basicMoveRange;
+		float bluetoothValue;
 };
 
 #endif

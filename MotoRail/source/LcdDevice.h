@@ -27,6 +27,7 @@ public:
 	void zeroValues();
 	void lcdClear(LiquidCrystal LCD);
 	void setContent();
+	void setBluetoothValue(float value);
 	
 	bool startFlag;
 	int lcdButton;

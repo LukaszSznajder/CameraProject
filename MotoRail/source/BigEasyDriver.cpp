@@ -28,7 +28,7 @@ BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 	pinMode(dirPin, OUTPUT);
 	pinMode(stepPin, OUTPUT);
 	_dirPin = dirPin;
-	_invDir = -1;
+	_invDir = 1;
 	_stepPin = stepPin;
 	_dir = true;
 	_lineSpeed = 0;
@@ -40,15 +40,35 @@ BigEasyDriver::BigEasyDriver(int dirPin, int stepPin){
 	_rampStep = rampStep; 
 }
 
+BigEasyDriver::BigEasyDriver(){
+}
+
+float BigEasyDriver::timeToMoveMaxSpeed(float distance, float frames){
+	float timeRamp, timeSteady, steadyStep, totalStep, time;
+	float rampSteps = rampStep;
+	
+	if(distance == 0)
+		time = 0;
+	else{
+		totalStep = BigEasyDriver::convertDistanceToSteps(distance/frames);
+		
+		timeRamp = 2*rampSteps/(stSpeed + maxSpeed);
+		steadyStep = totalStep - rampSteps * 2;
+		timeSteady = steadyStep / maxSpeed;
+		time = timeRamp*2 + timeSteady;
+	}
+	return(time);
+}
+
 void BigEasyDriver::doStep(double totalSteps){
 
 	if(_debugMode){
 		Serial.print("start_currentLocation: "); Serial.println(_currentLocation);
 	}
 	if(_dir)
-		_currentLocation = _currentLocation - BigEasyDriver::convertStepsToDistance(totalSteps);
+		_currentLocation = _currentLocation + BigEasyDriver::convertStepsToDistance(totalSteps) * _invDir;
 	else
-		_currentLocation = _currentLocation + BigEasyDriver::convertStepsToDistance(totalSteps);
+		_currentLocation = _currentLocation - BigEasyDriver::convertStepsToDistance(totalSteps) * _invDir;
 	if(_debugMode){
 		Serial.print("end_currentLocation: "); Serial.println(_currentLocation);
 		Serial.println("******************************");
@@ -304,4 +324,7 @@ void BigEasyDriver::setRampSteps(int setRampSteps){
 	_rampStep = setRampSteps; 
 } 
 
+double BigEasyDriver::convertDistanceToSteps(float distance){
+	return(round((distance*steepsPerRev)/(2*pi*gearRadius)));
+}
 
